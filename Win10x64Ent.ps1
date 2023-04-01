@@ -10,6 +10,11 @@
 &certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer
 Install-Module OSD -Force
 Import-Module OSD -Force
+
+if ((Get-MyComputerModel) -match 'Virtual') {
+    Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
+    Set-DisRes 1600
+}
 #================================================
 #   [OS] Start-OSDCloud with Params
 #================================================
