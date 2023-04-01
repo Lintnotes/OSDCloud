@@ -7,7 +7,7 @@
 #   PreOS
 #   Install and Import OSD Module
 #================================================
-&certutil.exe -addstore -f -enteprrise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer
+&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer
 Install-Module OSD -Force
 Import-Module OSD -Force
 #================================================
@@ -29,6 +29,7 @@ Start-OSDCloud @Params
 #   WinPE PostOS Sample
 #   AutopilotOOBE Offline Staging
 #================================================
+&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer
 Install-Module AutopilotOOBE -Force
 Import-Module AutopilotOOBE -Force
 
