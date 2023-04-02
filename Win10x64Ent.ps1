@@ -8,8 +8,12 @@
 #   Install and Import OSD Module
 #================================================
 &certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
-Install-Module OSD -SkipPublisherCheck -Force
-Import-Module OSD -SkipPublisherCheck -Force
+Install-Module OSD -Force
+Import-Module OSD -Force
+Install-Module DellBIOSProvider
+Import-Module DellBIOSProvider -Verbose
+Install-Module -Name HPCMSL
+Install-Module -Name HPCMSL -Force -AcceptLicense
 
 if ((Get-MyComputerModel) -match 'Virtual') {
     Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
@@ -35,8 +39,8 @@ Start-OSDCloud @Params
 #   AutopilotOOBE Offline Staging
 #================================================
 &certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
-Install-Module AutopilotOOBE -SkipPublisherCheck -Force
-Import-Module AutopilotOOBE -SkipPublisherCheck -Force
+Install-Module AutopilotOOBE -Force
+Import-Module AutopilotOOBE -Force
 
 $Params = @{
     Title = 'Intune Manual Autopilot Registration'
