@@ -9,9 +9,9 @@
 #================================================
 $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
-&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer
-Install-Module OSD -Force
-Import-Module OSD -Force
+&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
+#Install-Module OSD -Force
+#Import-Module OSD -Force
 Install-Module DellBIOSProvider
 Import-Module DellBIOSProvider -Verbose
 Install-Module -Name HPCMSL
