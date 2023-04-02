@@ -7,9 +7,9 @@
 #   PreOS
 #   Install and Import OSD Module
 #================================================
-&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer
-Install-Module OSD -Force
-Import-Module OSD -Force
+&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
+Install-Module OSD -SkipPublisherCheck -Force
+Import-Module OSD -SkipPublisherCheck -Force
 
 if ((Get-MyComputerModel) -match 'Virtual') {
     Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
@@ -34,9 +34,9 @@ Start-OSDCloud @Params
 #   WinPE PostOS Sample
 #   AutopilotOOBE Offline Staging
 #================================================
-&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer
-Install-Module AutopilotOOBE -Force
-Import-Module AutopilotOOBE -Force
+&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
+Install-Module AutopilotOOBE -SkipPublisherCheck -Force
+Import-Module AutopilotOOBE -SkipPublisherCheck -Force
 
 $Params = @{
     Title = 'Intune Manual Autopilot Registration'
