@@ -7,6 +7,8 @@
 #   PreOS
 #   Install and Import OSD Module
 #================================================
+$TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 &certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer
 Install-Module OSD -Force
 Import-Module OSD -Force
