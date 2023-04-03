@@ -46,6 +46,10 @@ Start-OSDCloud @Params
 #   AutopilotOOBE Offline Staging
 #================================================
 &certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
+Set-ExecutionPolicy RemoteSigned -Force
+Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+Install-Module OSD -Force
+Import-Module OSD -Force
 Install-Module AutopilotOOBE -Force
 Import-Module AutopilotOOBE -Force
 
