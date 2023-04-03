@@ -14,7 +14,11 @@ Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 #Install-Module OSD -Force
 #Import-Module OSD -Force
 if ((Get-MyComputerManufacturer) -match 'Dell') {
+#New-Item -Path $env:ProgramFiles\WindowsPowerShell\Modules\DellBIOSProvider -Type Directory -Force
 Install-Module DellBIOSProvider
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/msvcp140.dll" -OutFile "$env:ProgramFiles\WindowsPowerShell\Modules\DellBIOSProvider\msvcp140.dll" -ErrorAction SilentlyContinue
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140.dll" -OutFile "$env:ProgramFiles\WindowsPowerShell\Modules\DellBIOSProvider\vcruntime140.dll" -ErrorAction SilentlyContinue
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140_1.dll" -OutFile "$env:ProgramFiles\WindowsPowerShell\Modules\DellBIOSProvider\vcruntime140_1.dll" -ErrorAction SilentlyContinue
 Import-Module DellBIOSProvider -Verbose
 }
 if ((Get-MyComputerManufacturer) -match 'HP') {
