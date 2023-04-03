@@ -11,14 +11,12 @@ $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 &certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-#Install-Module OSD -Force
-#Import-Module OSD -Force
 if ((Get-MyComputerManufacturer) -match 'Dell') {
-#New-Item -Path $env:ProgramFiles\WindowsPowerShell\Modules\DellBIOSProvider -Type Directory -Force
-Install-Module DellBIOSProvider
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/msvcp140.dll" -OutFile "$env:ProgramFiles\WindowsPowerShell\Modules\DellBIOSProvider\msvcp140.dll" -ErrorAction SilentlyContinue
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140.dll" -OutFile "$env:ProgramFiles\WindowsPowerShell\Modules\DellBIOSProvider\vcruntime140.dll" -ErrorAction SilentlyContinue
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140_1.dll" -OutFile "$env:ProgramFiles\WindowsPowerShell\Modules\DellBIOSProvider\vcruntime140_1.dll" -ErrorAction SilentlyContinue
+Install-Module DellBIOSProvider -Force
+$DellProviderPath = Split-Path -Path (Get-Module -ListAvailable DellBiosProvider).Path
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/msvcp140.dll" -OutFile "$DellProviderPath\msvcp140.dll" -ErrorAction SilentlyContinue
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140.dll" -OutFile "$DellProviderPath\vcruntime140.dll" -ErrorAction SilentlyContinue
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140_1.dll" -OutFile "$DellProviderPath\vcruntime140_1.dll" -ErrorAction SilentlyContinue
 Import-Module DellBIOSProvider -Verbose
 }
 if ((Get-MyComputerManufacturer) -match 'HP') {
@@ -49,13 +47,11 @@ Start-OSDCloud @Params
 #   WinPE PostOS Sample
 #   AutopilotOOBE Offline Staging
 #================================================
+$TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 &certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
 Set-ExecutionPolicy RemoteSigned -Force
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-Install-Module OSD -Force
-Import-Module OSD -Force
-Install-Module AutopilotOOBE -Force
-Import-Module AutopilotOOBE -Force
 
 $Params = @{
     Title = 'Intune Manual Autopilot Registration'
