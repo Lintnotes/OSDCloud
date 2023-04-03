@@ -43,89 +43,112 @@ $Params = @{
     ZTI = $True
 }
 Start-OSDCloud @Params
-#================================================
-#   WinPE PostOS Sample
-#   AutopilotOOBE Offline Staging
-#================================================
-$TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
-[System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
-&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
-Set-ExecutionPolicy RemoteSigned -Force
-Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-(New-Object -ComObject 'Shell.Application').Namespace(17).Items() | Foreach {$_.InvokeVerb('Eject')} -ErrorAction SilentlyContinue
 
-$Params = @{
-    Title = 'Intune Manual Autopilot Registration'
-    GroupTag = 'Enterprise'
-    GroupTagOptions = 'Development','Enterprise'
-    Hidden = 'AddToGroup','AssignedComputerName','AssignedUser','PostAction'
-    Assign = $true
-    Run = 'NetworkingWireless'
-    Docs = 'https://autopilotoobe.osdeploy.com/'
+#================================================
+#  [PostOS] OOBEDeploy Configuration
+#================================================
+Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json"
+$OOBEDeployJson = @'
+{
+    "Autopilot":  {
+                      "IsPresent":  false
+                  },
+    "RemoveAppx":  [
+                       "Microsoft.549981C3F5F10",
+                        "Microsoft.GetHelp",
+                        "Microsoft.Getstarted",
+                        "Microsoft.Microsoft3DViewer",
+                        "Microsoft.MicrosoftOfficeHub",
+                        "Microsoft.MicrosoftSolitaireCollection",
+                        "Microsoft.MixedReality.Portal",
+                        "Microsoft.People",
+                        "Microsoft.SkypeApp",
+                        "Microsoft.Wallet",
+                        "microsoft.windowscommunicationsapps",
+                        "Microsoft.WindowsFeedbackHub",
+                        "Microsoft.Xbox.TCUI",
+                        "Microsoft.XboxApp",
+                        "Microsoft.XboxGameOverlay",
+                        "Microsoft.XboxGamingOverlay",
+                        "Microsoft.XboxIdentityProvider",
+                        "Microsoft.XboxSpeechToTextOverlay",
+                        "Microsoft.YourPhone",
+                        "Microsoft.ZuneMusic",
+                        "Microsoft.ZuneVideo"
+                   ],
+    "UpdateDrivers":  {
+                          "IsPresent":  true
+                      },
+    "UpdateWindows":  {
+                          "IsPresent":  true
+                      }
 }
-Start-AutopilotOOBE @Params
-#================================================
-#   WinPE PostOS Sample
-#   OOBEDeploy Offline Staging
-#================================================
-$Params = @{
-    Autopilot = $true
-    RemoveAppx = "CommunicationsApps","OfficeHub","People","Skype","Solitaire","Xbox","ZuneMusic","ZuneVideo"
-    UpdateDrivers = $true
-    UpdateWindows = $true
-    AddNetFX3 = $true
+'@
+If (!(Test-Path "C:\ProgramData\OSDeploy")) {
+    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
 }
-Start-OOBEDeploy @Params
+$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
+
 #================================================
-#   WinPE PostOS
-#   Set OOBEDeploy CMD.ps1
+#  [PostOS] AutopilotOOBE Configuration Staging
 #================================================
-$SetCommand = @'
-@echo off
-:: Set the PowerShell Execution Policy
-PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
-:: Add PowerShell Scripts to the Path
-set path=%path%;C:\Program Files\WindowsPowerShell\Scripts
-:: Open and Minimize a PowerShell instance just in case
-start PowerShell -NoL -W Mi
-:: Install the latest OSD Module
-start "Install-Module OSD" /wait PowerShell -NoL -C Install-Module OSD -Force -Verbose
-:: Start-OOBEDeploy
-:: There are multiple example lines. Make sure only one is uncommented
-:: The next line assumes that you have a configuration saved in C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json
-start "Start-OOBEDeploy" PowerShell -NoL -C Start-OOBEDeploy
-:: The next line assumes that you do not have a configuration saved in or want to ensure that these are applied
-REM start "Start-OOBEDeploy" PowerShell -NoL -C Start-OOBEDeploy -AddNetFX3 -UpdateDrivers -UpdateWindows
-exit
+Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json"
+$AutopilotOOBEJson = @'
+{
+    "Assign":  {
+                   "IsPresent":  true
+               },
+    "GroupTag":  "Enterprise",
+    "AddToGroup": "Intune Autopilot Manual Register",
+    "Hidden":  [
+                   "AssignedComputerName",
+                   "AssignedUser",
+                   "PostAction",
+                   "GroupTag",
+                   "Assign"
+               ],
+    "PostAction":  "Quit",
+    "Run":  "NetworkingWireless",
+    "Docs":  "https://google.com/",
+    "Title":  "Intune Manual Autopilot Registration"
+}
 '@
-$SetCommand | Out-File -FilePath "C:\Windows\OOBEDeploy.cmd" -Encoding ascii -Force
+If (!(Test-Path "C:\ProgramData\OSDeploy")) {
+    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
+}
+$AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
+
 #================================================
-#   WinPE PostOS
-#   Set AutopilotOOBE CMD.ps1
+#  [PostOS] AutopilotOOBE CMD Command Line
 #================================================
-$SetCommand = @'
-@echo off
-:: Set the PowerShell Execution Policy
+Write-Host -ForegroundColor Green "Create C:\Windows\System32\OOBE.cmd"
+$OOBECMD = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
-:: Add PowerShell Scripts to the Path
-set path=%path%;C:\Program Files\WindowsPowerShell\Scripts
-:: Open and Minimize a PowerShell instance just in case
-start PowerShell -NoL -W Mi
-:: Install the latest AutopilotOOBE Module
-start "Install-Module AutopilotOOBE" /wait PowerShell -NoL -C Install-Module AutopilotOOBE -Force -Verbose
-:: Start-AutopilotOOBE
-:: There are multiple example lines. Make sure only one is uncommented
-:: The next line assumes that you have a configuration saved in C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json
-start "Start-AutopilotOOBE" PowerShell -NoL -C Start-AutopilotOOBE
-:: The next line is how you would apply a CustomProfile
-REM start "Start-AutopilotOOBE" PowerShell -NoL -C Start-AutopilotOOBE -CustomProfile OSDeploy
-:: The next line is how you would configure everything from the command line
-REM start "Start-AutopilotOOBE" PowerShell -NoL -C Start-AutopilotOOBE -Title 'OSDeploy Autopilot Registration' -GroupTag Enterprise -GroupTagOptions Development,Enterprise -Assign
-exit
+Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
+Start /Wait PowerShell -NoL -C Install-Module AutopilotOOBE -Force -Verbose
+Start /Wait PowerShell -NoL -C Install-Module OSD -Force -Verbose
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/AkosBakos/OSDCloud/main/Set-KeyboardLanguage.ps1
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://check-autopilotprereq.osdcloud.ch
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://start-autopilotoobe.osdcloud.ch
+Start /Wait PowerShell -NoL -C Start-OOBEDeploy
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://tpm.osdcloud.ch
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://cleanup.osdcloud.ch
+Start /Wait PowerShell -NoL -C Restart-Computer -Force
 '@
-$SetCommand | Out-File -FilePath "C:\Windows\Autopilot.cmd" -Encoding ascii -Force
+$OOBECMD | Out-File -FilePath 'C:\Windows\System32\OOBE.cmd' -Encoding ascii -Force
+
 #================================================
-#   PostOS
+#  [PostOS] SetupComplete CMD Command Line
+#================================================
+Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
+$SetupCompleteCMD = @'
+'@
+$SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
+
+#=======================================================================
 #   Restart-Computer
-#================================================
-Restart-Computer
+#=======================================================================
+Write-Host "Restarting in 20 seconds!" -ForegroundColor Green
+Start-Sleep -Seconds 20
+wpeutil reboot
