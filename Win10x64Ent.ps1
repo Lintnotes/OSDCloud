@@ -52,6 +52,7 @@ $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 &certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
 Set-ExecutionPolicy RemoteSigned -Force
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+(New-Object -ComObject 'Shell.Application').Namespace(17).Items() | Foreach {$_.InvokeVerb('Eject')} -ErrorAction SilentlyContinue
 
 $Params = @{
     Title = 'Intune Manual Autopilot Registration'
