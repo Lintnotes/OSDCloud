@@ -63,7 +63,7 @@ $Params = @{
     Run = 'NetworkingWireless'
     Docs = 'https://autopilotoobe.osdeploy.com/'
 }
-AutopilotOOBE @Params
+Start-AutopilotOOBE @Params
 #================================================
 #   WinPE PostOS Sample
 #   OOBEDeploy Offline Staging
