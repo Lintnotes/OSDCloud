@@ -10,14 +10,19 @@
 $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 &certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
+Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 #Install-Module OSD -Force
 #Import-Module OSD -Force
+if ((Get-MyComputerManufacturer) -match 'Dell') {
 Install-Module DellBIOSProvider
 Import-Module DellBIOSProvider -Verbose
-Install-Module -Name HPCMSL
+}
+if ((Get-MyComputerManufacturer) -match 'HP') {
+Install-Module -Name HPCMSL -AcceptLicense
 Install-Module -Name HPCMSL -Force -AcceptLicense
+}
 
-if ((Get-MyComputerModel) -match 'Virtual') {
+if ((Get-MyComputerModel) -match 'Virtual|Vmware') {
     Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
     Set-DisRes 1600
 }
