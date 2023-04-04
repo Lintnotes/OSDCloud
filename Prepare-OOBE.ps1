@@ -9,7 +9,8 @@ if ($env:SystemDrive -eq 'X:')
 elseif ($env:UserName -ne 'defaultuser0')
 {
     Write-Warning 'This PSCloudScript must be run from OOBE'
-    Start-Sleep -Seconds 5
+    Write-Warning '$env:UserName'
+   # Start-Sleep -Seconds 5
 }
 else
 {
