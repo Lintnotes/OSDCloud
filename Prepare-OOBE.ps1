@@ -1,53 +1,39 @@
 $Global:Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-Prepare-OOBE.log"
 Start-Transcript -Path (Join-Path "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\" $Global:Transcript) -ErrorAction Ignore
 
-if ($env:SystemDrive -eq 'X:')
+if ((Get-ExecutionPolicy) -ne 'RemoteSigned')
 {
-    Write-Warning 'This PSCloudScript cannot be run from WinPE'
-    Start-Sleep -Seconds 5
+    Write-Verbose -Verbose 'Set PowerShell ExecutionPolicy to RemoteSigned'
+    Set-ExecutionPolicy RemoteSigned -Force
 }
-elseif ($env:UserName -ne 'defaultuser0')
+if (-not (Get-PackageProvider | Where-Object {$_.Name -eq 'NuGet'}))
 {
-    Write-Warning 'This PSCloudScript must be run from OOBE'
-    Write-Warning '$env:UserName'
-   # Start-Sleep -Seconds 5
+    Write-Verbose -Verbose 'Install PackageProvider NuGet'
+    Install-PackageProvider -Name NuGet -Force
 }
-else
+
+if ((Get-Module PowerShellGet).version -lt [System.Version]'2.2.5.0')
 {
-    if ((Get-ExecutionPolicy) -ne 'RemoteSigned')
-    {
-        Write-Verbose -Verbose 'Set PowerShell ExecutionPolicy to RemoteSigned'
-        Set-ExecutionPolicy RemoteSigned -Force
-    }
-    if (-not (Get-PackageProvider | Where-Object {$_.Name -eq 'NuGet'}))
-    {
-        Write-Verbose -Verbose 'Install PackageProvider NuGet'
-        Install-PackageProvider -Name NuGet -Force
-    }
-
-    if ((Get-Module PowerShellGet).version -lt [System.Version]'2.2.5.0')
-    {
-        Write-Verbose -Verbose 'Install PowerShell Module PowerShellGet'
-        Install-Module PowerShellGet -Force
-    }
-    if ((Get-Module PackageManagement).version -lt [System.Version]'1.4.7.0')
-    {
-        Write-Verbose -Verbose 'Install PowerShell Module PackageManagement'
-        Install-Module PackageManagement -Force
-    }
-
-    Write-Verbose -Verbose 'Install PowerShell Module OSD'
-    Install-Module OSD -Force
-
-    Write-Verbose -Verbose 'Install PowerShell Module AutopilotOOBE'
-    Install-Module AutopilotOOBE -Force
-
-    
-    Write-Verbose -Verbose 'Install PowerShell Script Get-WindowsAutoPilotInfo'
-    Install-Script -Name Get-WindowsAutoPilotInfo -Force
-
-    Write-Verbose 'Run AutopilotOOBE in the new PowerShell window' -Verbose
-    Start-Sleep -Seconds 5
-    Start-Process PowerShell.exe -ArgumentList "-NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Run-OOBE.ps1"
+    Write-Verbose -Verbose 'Install PowerShell Module PowerShellGet'
+    Install-Module PowerShellGet -Force
 }
+if ((Get-Module PackageManagement).version -lt [System.Version]'1.4.7.0')
+{
+    Write-Verbose -Verbose 'Install PowerShell Module PackageManagement'
+    Install-Module PackageManagement -Force
+}
+
+Write-Verbose -Verbose 'Install PowerShell Module OSD'
+Install-Module OSD -Force
+
+Write-Verbose -Verbose 'Install PowerShell Module AutopilotOOBE'
+Install-Module AutopilotOOBE -Force
+
+
+Write-Verbose -Verbose 'Install PowerShell Script Get-WindowsAutoPilotInfo'
+Install-Script -Name Get-WindowsAutoPilotInfo -Force
+
+Write-Verbose 'Run AutopilotOOBE in the new PowerShell window' -Verbose
+Start-Sleep -Seconds 5
+Start-Process PowerShell.exe -ArgumentList "-NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Run-OOBE.ps1"
 Stop-Transcript
