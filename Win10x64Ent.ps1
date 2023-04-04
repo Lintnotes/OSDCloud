@@ -54,10 +54,7 @@ PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
 $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
-Start /Wait PowerShell -NoL -C Install-Module OSD -Force
-Start /Wait PowerShell -NoL -C Import-Module OSD -Force
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://sandbox.osdcloud.com
-Start-OOBEDeploy -AddNetFX3 -UpdateDrivers -UpdateWindows -SetEdition Enterprise -RemoveAppx @("Microsoft.549981C3F5F10","Microsoft.GetHelp","Microsoft.Getstarted","Microsoft.Microsoft3DViewer","Microsoft.MicrosoftOfficeHub","Microsoft.MicrosoftSolitaireCollection","Microsoft.MixedReality.Portal","Microsoft.People","Microsoft.SkypeApp","Microsoft.Wallet","microsoft.windowscommunicationsapps","Microsoft.WindowsFeedbackHub","Microsoft.Xbox.TCUI","Microsoft.XboxApp","Microsoft.XboxGameOverlay","Microsoft.XboxGamingOverlay","Microsoft.XboxIdentityProvider","Microsoft.XboxSpeechToTextOverlay","Microsoft.YourPhone","Microsoft.ZuneMusic","Microsoft.ZuneVideo")
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Prepare-OOBE.ps1
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
 Start /Wait PowerShell -NoL -C Restart-Computer -Force
 '@
