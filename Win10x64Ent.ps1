@@ -48,29 +48,35 @@ Start-EjectCD
 #================================================
 #  [PostOS] AutopilotOOBE CMD Command Line
 #================================================
-Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\OOBE.cmd"
-$OOBECMD = @'
-PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
-Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
-$TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
-[System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Prepare-OOBE.ps1
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
-Start /Wait PowerShell -NoL -C Restart-Computer -Force
-'@
-$OOBECMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\OOBE.cmd' -Encoding ascii -Force
+#Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\OOBE.cmd"
+#$OOBECMD = @'
+#PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
+#Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
+#$TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
+#[System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Prepare-OOBE.ps1
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
+#Start /Wait PowerShell -NoL -C Restart-Computer -Force
+#'@
+#$OOBECMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\OOBE.cmd' -Encoding ascii -Force
 
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
 #================================================
 Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
 $SetupCompleteCMD = @'
+PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
+Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
+$TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Prepare-OOBE.ps1
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
 '@
 $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
 
 #=======================================================================
 #   Restart-Computer
 #=======================================================================
-Write-Host "Restarting in 20 seconds!" -ForegroundColor Green
-Start-Sleep -Seconds 20
+Write-Host "Restarting in 10 seconds!" -ForegroundColor Green
+Start-Sleep -Seconds 10
 wpeutil reboot
