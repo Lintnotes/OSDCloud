@@ -47,6 +47,6 @@ else
 
     Write-Verbose 'Run AutopilotOOBE in the new PowerShell window' -Verbose
     Start-Sleep -Seconds 5
-    Start-Process PowerShell.exe -ArgumentList 
+    Start-Process PowerShell.exe -ArgumentList "-NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Run-OOBE.ps1"
 }
 Stop-Transcript
