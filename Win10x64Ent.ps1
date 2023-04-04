@@ -52,6 +52,8 @@ Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\OOBE.cmd"
 $OOBECMD = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
+$TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
+[System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 Start /Wait PowerShell -NoL -C Install-Module OSD -Force
 Start /Wait PowerShell -NoL -C Import-Module OSD -Force
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://sandbox.osdcloud.com
