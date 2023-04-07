@@ -14,9 +14,9 @@ If ([Version]$TestWinGet. Version -gt "2022.506.16.0")
     $WingetInstaller = "$env:WINDIR\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
     $VCLibs = "$env:WINDIR\Temp\Microsoft.VCLibs.x64.14.00.Desktop.appx"
     $Xaml = "$env:WINDIR\Temp\Microsoft.UI.Xaml.2.7_7.2208.15002.0_x64__8wekyb3d8bbwe.Appx"
-    Invoke-WebRequest -Uri "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx" -OutFile $VCLibs -ErrorAction Stop
+    Invoke-WebRequest -Uri "https://github.com/Lintnotes/OSDCloud/blob/main/Microsoft.VCLibs.140.00.UWPDesktop_14.0.30704.0_x64__8wekyb3d8bbwe.Appx" -OutFile $VCLibs -ErrorAction Stop
     Invoke-WebRequest -Uri "https://github.com/Lintnotes/OSDCloud/blob/main/Microsoft.UI.Xaml.2.7_7.2208.15002.0_x64__8wekyb3d8bbwe.Appx" -OutFile $Xaml -ErrorAction Stop
-    Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/download/v1.4.10173/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile $WingetInstaller -ErrorAction Stop 
+    Invoke-WebRequest -Uri "https://github.com/Lintnotes/OSDCloud/blob/main/Microsoft.DesktopAppInstaller_2023.118.406.0_neutral_~_8wekyb3d8bbwe.Msixbundle" -OutFile $WingetInstaller -ErrorAction Stop 
     #Install WinGet MSIXBundle 
     Try 	{
         Write-Host "Installing MSIXBundle $WingetInstaller for App Installer..." 
