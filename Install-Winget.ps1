@@ -20,7 +20,9 @@ If ([Version]$TestWinGet. Version -gt "2022.506.16.0")
     #Install WinGet MSIXBundle 
     Try 	{
         Write-Host "Installing MSIXBundle $WingetInstaller for App Installer..." 
-        Add-AppxProvisionedPackage -Online -PackagePath $WingetInstaller -DependencyPackagePath $VCLibs,$Xaml -SkipLicense
+        Add-AppxProvisionedPackage -Online -PackagePath $VCLibs -SkipLicense
+        Add-AppxProvisionedPackage -Online -PackagePath $Xaml -SkipLicense
+        Add-AppxProvisionedPackage -Online -PackagePath $WingetInstaller -SkipLicense
         Write-Host "Installed MSIXBundle $WingetInstaller for App Installer" -ForegroundColor Green
         }
     Catch {
