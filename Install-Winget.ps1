@@ -12,13 +12,15 @@ If ([Version]$TestWinGet. Version -gt "2022.506.16.0")
     #Download WinGet MSIXBundle
     Write-Host "Not installed. Downloading WinGet..." 
     $WingetInstaller = "$env:WINDIR\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-    Invoke-WebRequest -Uri "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx" -OutFile "$env:WINDIR\Temp\Microsoft.VCLibs.x64.14.00.Desktop.appx" -ErrorAction Stop
-    Invoke-WebRequest -Uri "https://github.com/Lintnotes/OSDCloud/blob/main/Microsoft.UI.Xaml.2.7_7.2208.15002.0_x64__8wekyb3d8bbwe.Appx" -OutFile "$env:WINDIR\Temp\Microsoft.UI.Xaml.2.7_7.2208.15002.0_x64__8wekyb3d8bbwe.Appx" -ErrorAction Stop
+    $VCLibs = "$env:WINDIR\Temp\Microsoft.VCLibs.x64.14.00.Desktop.appx"
+    $Xaml = "$env:WINDIR\Temp\Microsoft.UI.Xaml.2.7_7.2208.15002.0_x64__8wekyb3d8bbwe.Appx"
+    Invoke-WebRequest -Uri "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx" -OutFile $VCLibs -ErrorAction Stop
+    Invoke-WebRequest -Uri "https://github.com/Lintnotes/OSDCloud/blob/main/Microsoft.UI.Xaml.2.7_7.2208.15002.0_x64__8wekyb3d8bbwe.Appx" -OutFile $Xaml -ErrorAction Stop
     Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/download/v1.4.10173/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile $WingetInstaller -ErrorAction Stop 
     #Install WinGet MSIXBundle 
     Try 	{
         Write-Host "Installing MSIXBundle $WingetInstaller for App Installer..." 
-        Add-AppxProvisionedPackage -Online -PackagePath $WingetInstaller -SkipLicense -DependencyPackagePath "$env:WINDIR\Temp\Microsoft.VCLibs.x64.14.00.Desktop.appx","$env:WINDIR\Temp\Microsoft.UI.Xaml.2.7_7.2208.15002.0_x64__8wekyb3d8bbwe.Appx"
+        Add-AppxProvisionedPackage -Online -PackagePath $WingetInstaller -DependencyPackagePath $VCLibs,$Xaml -SkipLicense
         Write-Host "Installed MSIXBundle $WingetInstaller for App Installer" -ForegroundColor Green
         }
     Catch {
