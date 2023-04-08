@@ -11,22 +11,16 @@ If ([Version]$TestWinGet. Version -gt "2022.506.16.0")
     {
     #Download WinGet MSIXBundle
     Write-Host "Not installed. Downloading WinGet..." 
-    $WingetInstaller = "$env:WINDIR\Temp\Microsoft.DesktopAppInstaller_2023.118.406.0_neutral_~_8wekyb3d8bbwe.Msixbundle"
-    $VCLibs = "$env:WINDIR\Temp\Microsoft.VCLibs.140.00.UWPDesktop_14.0.30704.0_x64__8wekyb3d8bbwe.Appx"
-    $Xaml = "$env:WINDIR\Temp\Microsoft.UI.Xaml.2.7_7.2208.15002.0_x64__8wekyb3d8bbwe.Appx"
-    Invoke-WebRequest -Uri "https://github.com/Lintnotes/OSDCloud/blob/main/Microsoft.VCLibs.140.00.UWPDesktop_14.0.30704.0_x64__8wekyb3d8bbwe.Appx" -OutFile $VCLibs -ErrorAction Stop
-    Invoke-WebRequest -Uri "https://github.com/Lintnotes/OSDCloud/blob/main/Microsoft.UI.Xaml.2.7_7.2208.15002.0_x64__8wekyb3d8bbwe.Appx" -OutFile $Xaml -ErrorAction Stop
-    Invoke-WebRequest -Uri "https://github.com/Lintnotes/OSDCloud/blob/main/Microsoft.DesktopAppInstaller_2023.118.406.0_neutral_~_8wekyb3d8bbwe.Msixbundle" -OutFile $WingetInstaller -ErrorAction Stop 
-    #Install WinGet MSIXBundle 
+    $MSIXBundle = "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+    $URL_msixbundle = "https://aka.ms/getwinget"
+    $wc = New-Object net.webclient
+    $wc.Downloadfile($URL_msixbundle, "$env:WINDIR\Temp\$MSIXBundle")
     Try 	{
         Write-Host "Installing MSIXBundle $WingetInstaller for App Installer..." 
-        Add-AppxProvisionedPackage -Online -PackagePath $VCLibs -SkipLicense -Verbose
-        Add-AppxProvisionedPackage -Online -PackagePath $Xaml -SkipLicense -Verbose
-        Add-AppxProvisionedPackage -Online -PackagePath $WingetInstaller -SkipLicense -Verbose
+        Add-AppxProvisionedPackage -Online -PackagePath $env:WINDIR\Temp\$MSIXBundle -SkipLicense
         Write-Host "Installed MSIXBundle $WingetInstaller for App Installer" -ForegroundColor Green
         }
     Catch {
         Write-Host "Failed to install MSIXBundle $WingetInstaller for App Installer..." -ForegroundColor Red
-        Write-Output $_
         } 
     }
