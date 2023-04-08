@@ -27,5 +27,6 @@ If ([Version]$TestWinGet. Version -gt "2022.506.16.0")
         }
     Catch {
         Write-Host "Failed to install MSIXBundle $WingetInstaller for App Installer..." -ForegroundColor Red
+        Write-Output $_
         } 
     }
