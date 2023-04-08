@@ -16,9 +16,9 @@ If ([Version]$TestWinGet. Version -gt "2022.506.16.0")
     $wc = New-Object net.webclient
     $wc.Downloadfile($URL_msixbundle, "$env:WINDIR\Temp\$MSIXBundle")
     Try 	{
-        Write-Host "Installing MSIXBundle $WingetInstaller for App Installer..." 
+        Write-Host "Installing MSIXBundle $MSIXBundle for App Installer..." 
         Add-AppxProvisionedPackage -Online -PackagePath $env:WINDIR\Temp\$MSIXBundle -SkipLicense
-        Write-Host "Installed MSIXBundle $WingetInstaller for App Installer" -ForegroundColor Green
+        Write-Host "Installed MSIXBundle $MSIXBundle for App Installer" -ForegroundColor Green
         }
     Catch {
         Write-Host "Failed to install MSIXBundle $WingetInstaller for App Installer..." -ForegroundColor Red
