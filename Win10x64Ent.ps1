@@ -45,12 +45,6 @@ $Params = @{
 Start-OSDCloud @Params
 Start-EjectCD
 
-Install-Module AutopilotOOBE -Force -Verbose
-Start-AutopilotOOBE
-Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
-Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-Updates.ps1
-Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Cleanup-Script.ps1
-
 #================================================
 #  [PostOS] AutopilotOOBE CMD Command Line
 #================================================
@@ -58,15 +52,15 @@ Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\OOBE.cmd"
 $OOBECMD = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
-Start /Wait PowerShell -NoL -C Install-Module AutopilotOOBE -Force -Verbose
-Start /Wait PowerShell -NoL -C Install-Module OSD -Force -Verbose
-Start /Wait PowerShell -NoL -C Start-AutopilotOOBE
+#Start /Wait PowerShell -NoL -C Install-Module AutopilotOOBE -Force -Verbose
+#Start /Wait PowerShell -NoL -C Install-Module OSD -Force -Verbose
+#Start /Wait PowerShell -NoL -C Start-AutopilotOOBE
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-Updates.ps1
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-Updates.ps1
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Cleanup-Script.ps1
 Start /Wait PowerShell -NoL -C Restart-Computer -Force
 '@
-#$OOBECMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\OOBE.cmd' -Encoding ascii -Force
+$OOBECMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\OOBE.cmd' -Encoding ascii -Force
 
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
@@ -79,6 +73,6 @@ $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.c
 #=======================================================================
 #   Restart-Computer
 #=======================================================================
-Write-Host "Restarting in 10 seconds!" -ForegroundColor Green
-Start-Sleep -Seconds 10
+#Write-Host "Restarting in 10 seconds!" -ForegroundColor Green
+#Start-Sleep -Seconds 10
 wpeutil reboot
