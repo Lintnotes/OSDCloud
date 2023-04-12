@@ -9,7 +9,6 @@
 #================================================
 $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
-&certutil.exe -addstore -f -enterprise root X:\OSDCloud\Config\Scripts\StartNet\certadmin.cer | Out-Null
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 if ((Get-MyComputerManufacturer) -match 'Dell') {
 Install-Module DellBIOSProvider -Force
@@ -17,7 +16,7 @@ $DellProviderPath = Split-Path -Path (Get-Module -ListAvailable DellBiosProvider
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/msvcp140.dll" -OutFile "$DellProviderPath\msvcp140.dll" -ErrorAction SilentlyContinue
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140.dll" -OutFile "$DellProviderPath\vcruntime140.dll" -ErrorAction SilentlyContinue
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140_1.dll" -OutFile "$DellProviderPath\vcruntime140_1.dll" -ErrorAction SilentlyContinue
-Import-Module DellBIOSProvider -Verbose
+Import-Module DellBIOSProvider
 }
 if ((Get-MyComputerManufacturer) -match 'HP') {
 Install-Module -Name HPCMSL -AcceptLicense
@@ -52,11 +51,7 @@ Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\OOBE.cmd"
 $OOBECMD = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
-#Start /Wait PowerShell -NoL -C Install-Module AutopilotOOBE -Force -Verbose
-#Start /Wait PowerShell -NoL -C Install-Module OSD -Force -Verbose
-#Start /Wait PowerShell -NoL -C Start-AutopilotOOBE
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
-#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-Updates.ps1
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Cleanup-Script.ps1
 Start /Wait PowerShell -NoL -C Restart-Computer -Force
 '@
