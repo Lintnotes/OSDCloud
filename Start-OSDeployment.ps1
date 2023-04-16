@@ -60,7 +60,7 @@ $AssignedComputerName = $OSDVars.ComputerName
 $Production = @'
 {
     "CloudAssignedDomainJoinMethod":  0,
-    "CloudAssignedDeviceName":  "$AssignedComputerName",
+    "CloudAssignedDeviceName": "INT%SERIAL%",
     "CloudAssignedAutopilotUpdateTimeout":  1800000,
     "CloudAssignedForcedEnrollment":  1,
     "Version":  2049,
@@ -78,7 +78,7 @@ $Production = @'
 $Kiosks = @'
 {
     "CloudAssignedTenantId":  "aa90fdc2-6a50-4f3d-b4bd-7fe753d268aa",
-    "CloudAssignedDeviceName":  "$AssignedComputerName",
+    "CloudAssignedDeviceName": "INT%SERIAL%",
     "CloudAssignedAutopilotUpdateTimeout":  1800000,
     "CloudAssignedAutopilotUpdateDisabled":  1,
     "CloudAssignedForcedEnrollment":  1,
@@ -109,9 +109,9 @@ $Params = @{
 Start-OSDCloud @Params
 Start-EjectCD
 If($OSDVars.AutoPilotConfig -eq 'Hubspot Production Devices'){
-    $Production | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json | Out-Null
+    $Production.Replace('"INT%SERIAL%"',$AssignedComputerName) | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json | Out-Null
 }Else{
-    $Kiosks | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json | Out-Null
+    $Kiosks.Replace('"INT%SERIAL%"',$AssignedComputerName) | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json | Out-Null
 }
 
 #================================================
@@ -122,7 +122,6 @@ $OOBECMD = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Start-OSDeployment.ps1
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Cleanup-Script.ps1
 Start /Wait PowerShell -NoL -C Restart-Computer -Force
 '@
