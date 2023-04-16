@@ -31,6 +31,7 @@ if ($WindowsPhase -eq 'WinPE') {
 $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript 'https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Start-OSDHubGUI.ps1'
 if ((Get-MyComputerManufacturer) -match 'Dell') {
 Install-Module DellBIOSProvider -Force
 $DellProviderPath = Split-Path -Path (Get-Module -ListAvailable DellBiosProvider).Path
@@ -48,23 +49,58 @@ if ((Get-MyComputerModel) -match 'Virtual|Vmware') {
     Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
     Set-DisRes 1600
 }
+
+If (Test-Path $env:WINDIR\Temp\OSDVarsFile.txt) {
+    $OSDVars = Get-Content -Raw -Path $env:WINDIR\Temp\OSDVarsFile.txt | ConvertFrom-StringData
+}
+$AssignedComputerName = $OSDVars.ComputerName
+
+#================================================
+#   Autopilot Configs
+#================================================
+$Production = @'
+{
+    "CloudAssignedDomainJoinMethod":  0,
+    "CloudAssignedDeviceName":  "$AssignedComputerName",
+    "CloudAssignedAutopilotUpdateTimeout":  1800000,
+    "CloudAssignedForcedEnrollment":  1,
+    "Version":  2049,
+    "CloudAssignedTenantId":  "aa90fdc2-6a50-4f3d-b4bd-7fe753d268aa",
+    "CloudAssignedAutopilotUpdateDisabled":  1,
+    "ZtdCorrelationId":  "82349a82-5f14-4eb4-a77b-5c8648f3343c",
+    "Comment_File":  "Profile Hubspot Production Devices",
+    "CloudAssignedAadServerData":  "{\"ZeroTouchConfig\":{\"CloudAssignedTenantUpn\":\"\",\"ForcedEnrollment\":1,\"CloudAssignedTenantDomain\":\"hubspotcorp.onmicrosoft.com\"}}",
+    "CloudAssignedOobeConfig":  1310,
+    "CloudAssignedTenantDomain":  "hubspotcorp.onmicrosoft.com",
+    "CloudAssignedLanguage":  "os-default"
+}
+'@
+
+$Kiosks = @'
+{
+    "CloudAssignedTenantId":  "aa90fdc2-6a50-4f3d-b4bd-7fe753d268aa",
+    "CloudAssignedDeviceName":  "$AssignedComputerName",
+    "CloudAssignedAutopilotUpdateTimeout":  1800000,
+    "CloudAssignedAutopilotUpdateDisabled":  1,
+    "CloudAssignedForcedEnrollment":  1,
+    "Version":  2049,
+    "Comment_File":  "Profile HubSpot Production Kiosk Devices",
+    "CloudAssignedAadServerData":  "{\"ZeroTouchConfig\":{\"CloudAssignedTenantUpn\":\"\",\"ForcedEnrollment\":1,\"CloudAssignedTenantDomain\":\"hubspotcorp.onmicrosoft.com\"}}",
+    "CloudAssignedOobeConfig":  1310,
+    "CloudAssignedDomainJoinMethod":  0,
+    "ZtdCorrelationId":  "9d255231-51ea-4353-8f73-bc7f3b403727",
+    "CloudAssignedLanguage":  "os-default",
+    "CloudAssignedTenantDomain":  "hubspotcorp.onmicrosoft.com"
+}
+'@
 #================================================
 #   [OS] Start-OSDCloud with Params
 #================================================
-    #$SelectedOS = "Windows 10","Windows 11" | Out-GridView -OutputMode Single -Title 'Select Operating System'
-    #$SelectedLanguage = 'en-us','ar-sa','bg-bg','cs-cz','da-dk','de-de','el-gr',
-            'en-gb','es-es','es-mx','et-ee','fi-fi',
-            'fr-ca','fr-fr','he-il','hr-hr','hu-hu','it-it',
-            'ja-jp','ko-kr','lt-lt','lv-lv','nb-no','nl-nl',
-            'pl-pl','pt-br','pt-pt','ro-ro','ru-ru','sk-sk',
-            'sl-si','sr-latn-rs','sv-se','th-th','tr-tr',
-            'uk-ua','zh-cn','zh-tw' | Out-GridView -OutputMode Single -Title 'Select Operating System Language'
-
 $Params = @{
-    OSVersion = "Windows 10"
+    OSVersion = $OSDVars.OperatingSystem
     OSBuild = "22H2"
     OSEdition = "Enterprise"
-    OSLanguage = "en-us"
+    OSLanguage = $OSDVars.OperatingSystemLanguage
     OSLicense = "Retail"
     SkipAutopilot = $True
     SkipODT = $true
@@ -73,6 +109,11 @@ $Params = @{
 }
 Start-OSDCloud @Params
 Start-EjectCD
+If($OSDVars.AutoPilotConfig -eq 'Hubspot Production Devices'){
+    $Production | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json | Out-Null
+}Else{
+    $Kiosks | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json | Out-Null
+}
 
 #================================================
 #  [PostOS] AutopilotOOBE CMD Command Line
@@ -170,3 +211,4 @@ if ($WindowsPhase -eq 'Windows') {
 }
 #endregion
 #=================================================
+
