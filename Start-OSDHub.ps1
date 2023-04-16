@@ -23,7 +23,7 @@ else {
 Write-Host -ForegroundColor DarkGray "$ScriptName $ScriptVersion $WindowsPhase"
 
 #Load OSDCloud Functions
-Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
+#Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
 #endregion
 #=================================================
 #region WinPE
@@ -31,7 +31,11 @@ if ($WindowsPhase -eq 'WinPE') {
 $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript 'https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Start-OSDHubGUI.ps1'
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Start-OSDHubGUI.ps1'
+While (!(Test-Path $env:WINDIR\Temp\OSDVarsFile.txt -ErrorAction SilentlyContinue))
+{
+  # endless loop, when the file will be there, it will continue
+}
 if ((Get-MyComputerManufacturer) -match 'Dell') {
 Install-Module DellBIOSProvider -Force
 $DellProviderPath = Split-Path -Path (Get-Module -ListAvailable DellBiosProvider).Path
@@ -211,4 +215,3 @@ if ($WindowsPhase -eq 'Windows') {
 }
 #endregion
 #=================================================
-
