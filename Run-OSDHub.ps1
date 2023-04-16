@@ -8,6 +8,7 @@
 #   Install and Import OSD Module
 #================================================
 #Start the Transcript
+Watch-OSDCloudProvisioning {
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
 $null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
 #Determine the proper Windows environment
@@ -178,3 +179,4 @@ if ($WindowsPhase -eq 'Windows') {
 }
 #endregion
 #=================================================
+}
