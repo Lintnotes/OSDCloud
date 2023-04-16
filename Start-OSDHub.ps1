@@ -19,9 +19,7 @@ else {
     elseif ($ImageState -eq 'IMAGE_STATE_SPECIALIZE_RESEAL_TO_AUDIT') {$WindowsPhase = 'AuditMode'}
     else {$WindowsPhase = 'Windows'}
 }
-Start-OSDProgress
 #Finish initialization
-Update-OSDProgress -Text "Starting OSDCloud $ScriptName $ScriptVersion $WindowsPhase..." # output to UI
 Write-Host -ForegroundColor DarkGray "$ScriptName $ScriptVersion $WindowsPhase"
 
 #Load OSDCloud Functions
@@ -30,7 +28,6 @@ Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
 #=================================================
 #region WinPE
 if ($WindowsPhase -eq 'WinPE') {
-Update-OSDProgress -Text "Updating & Importing OSD PowerShell Modules"
 $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
@@ -74,11 +71,8 @@ $Params = @{
     Firmware = $True
     ZTI = $True
 }
-Update-OSDProgress -Text " " # hide first text
-Update-OSDProgress -Text "Starting OSDCloud with @Params " # hide first text
 Start-OSDCloud @Params
 Start-EjectCD
-Update-OSDProgress -Text "Starting OSDCloud PostAction..."
 
 #================================================
 #  [PostOS] AutopilotOOBE CMD Command Line
@@ -106,8 +100,6 @@ $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.c
 #   Restart-Computer
 #=======================================================================
 #Write-Host "Restarting in 10 seconds!" -ForegroundColor Green
-Update-OSDProgress -Text " " # hide first text
-Update-OSDProgress -Text "Reboot in 10 seconds"
 Start-Sleep -Seconds 10
 wpeutil reboot
 }
