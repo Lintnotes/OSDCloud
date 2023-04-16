@@ -11,17 +11,7 @@
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
 $null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
 #Determine the proper Windows environment
-if ($env:SystemDrive -eq 'X:') {
-    $WindowsPhase = 'WinPE'
-    $SelectedOS = "Windows 10","Windows 11" | Out-GridView -OutputMode Single -Title 'Select Operating System'
-    $SelectedLanguage = 'en-us','ar-sa','bg-bg','cs-cz','da-dk','de-de','el-gr',
-            'en-gb','es-es','es-mx','et-ee','fi-fi',
-            'fr-ca','fr-fr','he-il','hr-hr','hu-hu','it-it',
-            'ja-jp','ko-kr','lt-lt','lv-lv','nb-no','nl-nl',
-            'pl-pl','pt-br','pt-pt','ro-ro','ru-ru','sk-sk',
-            'sl-si','sr-latn-rs','sv-se','th-th','tr-tr',
-            'uk-ua','zh-cn','zh-tw' | Out-GridView -OutputMode Single -Title 'Select Operating System Language'
-    }
+if ($env:SystemDrive -eq 'X:') {$WindowsPhase = 'WinPE'}
 else {
     $ImageState = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\State' -ErrorAction Ignore).ImageState
     if ($env:UserName -eq 'defaultuser0') {$WindowsPhase = 'OOBE'}
@@ -64,12 +54,20 @@ if ((Get-MyComputerModel) -match 'Virtual|Vmware') {
 #================================================
 #   [OS] Start-OSDCloud with Params
 #================================================
+    #$SelectedOS = "Windows 10","Windows 11" | Out-GridView -OutputMode Single -Title 'Select Operating System'
+    #$SelectedLanguage = 'en-us','ar-sa','bg-bg','cs-cz','da-dk','de-de','el-gr',
+            'en-gb','es-es','es-mx','et-ee','fi-fi',
+            'fr-ca','fr-fr','he-il','hr-hr','hu-hu','it-it',
+            'ja-jp','ko-kr','lt-lt','lv-lv','nb-no','nl-nl',
+            'pl-pl','pt-br','pt-pt','ro-ro','ru-ru','sk-sk',
+            'sl-si','sr-latn-rs','sv-se','th-th','tr-tr',
+            'uk-ua','zh-cn','zh-tw' | Out-GridView -OutputMode Single -Title 'Select Operating System Language'
 
 $Params = @{
-    OSVersion = $SelectedOS
+    OSVersion = "Windows 10"
     OSBuild = "22H2"
     OSEdition = "Enterprise"
-    OSLanguage = $SelectedLanguage
+    OSLanguage = "en-us"
     OSLicense = "Retail"
     SkipAutopilot = $True
     SkipODT = $true
@@ -180,4 +178,3 @@ if ($WindowsPhase -eq 'Windows') {
 }
 #endregion
 #=================================================
-
