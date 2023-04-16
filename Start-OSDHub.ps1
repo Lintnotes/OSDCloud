@@ -472,7 +472,6 @@ $WPFStartButton.Add_Click({
     Add-Content -Path $OSDVarsFile -Value "OperatingSystemLanguage=$(($WPFOSLanguageCombobox).SelectedItem)"
     Add-Content -Path $OSDVarsFile -Value "AutoPilotConfig=$(($WPFAutopilotJsonCombobox).SelectedItem)"
     Add-Content -Path $OSDVarsFile -Value "ComputerName=$(($WPFComputerNameTextBox).Text)"
-    Start PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Start-OSDeployment.ps1
     $UIWindow.Close()
     })
 ###### ON Load Event
