@@ -10,6 +10,10 @@
 #Start the Transcript
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
 $null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
+#Script Information
+$ScriptName = 'Start-OSDeployment'
+$ScriptVersion = '23.4.17.1'
+
 #Determine the proper Windows environment
 if ($env:SystemDrive -eq 'X:') {$WindowsPhase = 'WinPE'}
 else {
@@ -139,7 +143,8 @@ $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.c
 #   Restart-Computer
 #=======================================================================
 #Write-Host "Restarting in 10 seconds!" -ForegroundColor Green
-Start-Sleep -Seconds 10
+Start-Sleep -Seconds 5
+$null = Stop-Transcript -ErrorAction Ignore
 wpeutil reboot
 }
 #endregion
