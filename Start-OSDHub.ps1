@@ -321,7 +321,7 @@ $SW_RESTORE = 9;
 $SW_SHOWDEFAULT = 10;
 
 $ThisWindow = [System.Diagnostics.Process]::GetCurrentProcess().MainwindowTitle
-$ExcludedWindows = @($ThisWindow,'Remote Connection','','Administrator: Windows PowerShell')
+$ExcludedWindows = @($ThisWindow,'Remote Connection','','Administrator: Windows PowerShell','OSD Branding')
 $Windows = Get-Process | Where-object{$_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -notin $ExcludedWindows} | Select-Object ProcessName,Id,MainWindowHandle,MainWindowTitle
 Foreach($Window in $Windows){
     Write-Host "Hiding $($Window.MainWindowTitle)"
@@ -500,6 +500,7 @@ $WPFStartButton.Add_Click({
     Add-Content -Path $OSDVarsFile -Value "OperatingSystemLanguage=$(($WPFOSLanguageCombobox).SelectedItem)"
     Add-Content -Path $OSDVarsFile -Value "AutoPilotConfig=$(($WPFAutopilotJsonCombobox).SelectedItem)"
     Add-Content -Path $OSDVarsFile -Value "ComputerName=$(($WPFComputerNameTextBox).Text)"
+    Start-Process cmd.exe -ArgumentList " /c start Powershell iex (irm https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/OSDBranding.ps1)"
     Start-Process cmd.exe -ArgumentList " /c start Powershell iex (irm https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Start-OSDeployment.ps1)"
     $UIWindow.Close()
     })
