@@ -307,10 +307,10 @@ public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
 $ThisWindow = [System.Diagnostics.Process]::GetCurrentProcess().MainwindowTitle
 
-get-process | 
-       where mainwindowhandle -ne 0 |  
-            %{if ($_.MainWindowTitle -eq $ThisWindow) {} else { $Win32ShowWindowAsync::ShowWindowAsync($_.MainWindowHandle, 0) | Out-Null} }
-            
+#get-process | 
+#       where mainwindowhandle -ne 0 |  
+#            %{if ($_.MainWindowTitle -eq $ThisWindow) {} else { $Win32ShowWindowAsync::ShowWindowAsync($_.MainWindowHandle, 0) | Out-Null} }
+#            
 #===========================================================================
 # Store Form Objects In PowerShell
 #===========================================================================
