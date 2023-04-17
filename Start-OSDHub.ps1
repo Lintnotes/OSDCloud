@@ -300,18 +300,17 @@ $UIReader=(New-Object System.Xml.XmlNodeReader $xaml)
 try{$UIWindow=[Windows.Markup.XamlReader]::Load($UIReader)}
 catch{Write-Host "Error: Unable to load Windows.Markup.XamlReader:$($_.Exception.Message)"; exit}
 
-
-
-$ThisWindow = [System.Diagnostics.Process]::GetCurrentProcess().MainwindowHandle
 $Win32ShowWindowAsync = Add-Type –memberDefinition @"  
 [DllImport("user32.dll")]  
 public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);  
 "@ -name "Win32ShowWindowAsync" -namespace Win32Functions –passThru 
 
-Get-Process | 
-       where mainwindowhandle -ne 0 |  
-            %{if ($_.MainwindowHandle -eq $ThisWindow) { $Win32ShowWindowAsync::ShowWindowAsync($_.MainWindowHandle, 3) | Out-Null} else { $Win32ShowWindowAsync::ShowWindowAsync($_.MainWindowHandle, 6) | Out-Null} }
+$ThisWindow = [System.Diagnostics.Process]::GetCurrentProcess().MainwindowTitle
 
+get-process | 
+       where mainwindowhandle -ne 0 |  
+            %{if ($_.MainWindowTitle -eq $ThisWindow) {} else { $Win32ShowWindowAsync::ShowWindowAsync($_.MainWindowHandle, 0) | Out-Null} }
+            
 #===========================================================================
 # Store Form Objects In PowerShell
 #===========================================================================
