@@ -321,11 +321,10 @@ $SW_RESTORE = 9;
 $SW_SHOWDEFAULT = 10;
 
 $ThisWindow = [System.Diagnostics.Process]::GetCurrentProcess().MainwindowTitle
-
-$Windows = Get-Process | Where-object{$_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -ne $ThisWindow -and $_.MainWindowTitle -ne $Null} | Select-Object ProcessName,Id,MainWindowHandle,MainWindowTitle
+$ExcludedWindows = @($ThisWindow,'Remote Connection','')
+$Windows = Get-Process | Where-object{$_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -notin $ExcludedWindows} | Select-Object ProcessName,Id,MainWindowHandle,MainWindowTitle
 Foreach($Window in $Windows){
     Write-Host "Hiding $($Window.MainWindowTitle)"
-    Start-Sleep 60
     $Win32API::ShowWindowAsync($Window.MainWindowHandle, $SW_HIDE) | Out-Null 
 }
 
