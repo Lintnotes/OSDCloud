@@ -500,7 +500,6 @@ $WPFStartButton.Add_Click({
     Add-Content -Path $OSDVarsFile -Value "OperatingSystemLanguage=$(($WPFOSLanguageCombobox).SelectedItem)"
     Add-Content -Path $OSDVarsFile -Value "AutoPilotConfig=$(($WPFAutopilotJsonCombobox).SelectedItem)"
     Add-Content -Path $OSDVarsFile -Value "ComputerName=$(($WPFComputerNameTextBox).Text)"
-    Start-Process cmd.exe -ArgumentList " /c start Powershell iex (irm https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/OSDBranding.ps1)"
     Start-Process cmd.exe -ArgumentList " /c start Powershell iex (irm https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Start-OSDeployment.ps1)"
     $UIWindow.Close()
     })
