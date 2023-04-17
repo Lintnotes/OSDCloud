@@ -501,6 +501,7 @@ $WPFStartButton.Add_Click({
     Add-Content -Path $OSDVarsFile -Value "AutoPilotConfig=$(($WPFAutopilotJsonCombobox).SelectedItem)"
     Add-Content -Path $OSDVarsFile -Value "ComputerName=$(($WPFComputerNameTextBox).Text)"
     powershell iex (irm https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Start-OSDeployment.ps1)
+    Start-Sleep 10
     $UIWindow.Close()
     })
 ###### ON Load Event
