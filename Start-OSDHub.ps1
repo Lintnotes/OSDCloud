@@ -300,40 +300,17 @@ $UIReader=(New-Object System.Xml.XmlNodeReader $xaml)
 try{$UIWindow=[Windows.Markup.XamlReader]::Load($UIReader)}
 catch{Write-Host "Error: Unable to load Windows.Markup.XamlReader:$($_.Exception.Message)"; exit}
 
-# Hide Window
-$Win32API = Add-Type -Name Funcs -Namespace Win32 -PassThru -MemberDefinition @'
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern IntPtr FindWindow(string lpClassName, IntPtr lpWindowName);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern IntPtr FindWindow(IntPtr lpClassName, string lpWindowName);
-
-    [DllImport("user32.dll", SetLastError = true)] 
-    public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
-'@
-
-$SW_HIDE = 0;
-$SW_SHOWNORMAL = 1;
-$SW_SHOWMINIMIZED = 2;
-$SW_SHOWMAXIMIZED = 3;
-$SW_SHOWNOACTIVATE = 4;
-$SW_RESTORE = 9;
-$SW_SHOWDEFAULT = 10;
 
 $ThisWindow = [System.Diagnostics.Process]::GetCurrentProcess().MainwindowHandle
-$hwnds = @('FirstUXWnd','FirstUXWndClass','COMPSPEC')
-Foreach ($hwnd in $hwnds){
-    $hwndid = $Win32API::FindWindow($hwnd,[IntPtr]::Zero)
-    Write-Host "Info: FindWindow API for Window $($hwnd) Result: $($hwndid.ToString())"
-        If($hwndid -ne $SW_HIDE)
-            {
-                Write-Host "Info: Hiding Window $($hwndid)"
-                $Win32API::ShowWindowAsync($hwndid, $SW_HIDE) | Out-Null
-            }
-}
+$Win32ShowWindowAsync = Add-Type –memberDefinition @"  
+[DllImport("user32.dll")]  
+public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);  
+"@ -name "Win32ShowWindowAsync" -namespace Win32Functions –passThru 
+
+Get-Process | 
+       where mainwindowhandle -ne 0 |  
+            %{if ($_.MainwindowHandle -eq $ThisWindow) { $Win32ShowWindowAsync::ShowWindowAsync($_.MainWindowHandle, 3) | Out-Null} else { $Win32ShowWindowAsync::ShowWindowAsync($_.MainWindowHandle, 6) | Out-Null} }
 
 #===========================================================================
 # Store Form Objects In PowerShell
