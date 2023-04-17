@@ -1,5 +1,3 @@
-Add-Type -AssemblyName System.Windows.Forms
-
 $xaml = @"
 <Window x:Class="HubSpotOSDGUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -12,7 +10,7 @@ $xaml = @"
         RenderTransformOrigin="0.5,0.5"
         ResizeMode="NoResize"
         WindowStartupLocation = "CenterScreen"
-        Title="Hubspot OSD" Height="380" Width="820">
+        Title="Hubspot Cloud OSD" Height="380" Width="820">
     <Window.Resources>
         <ResourceDictionary>
             <Style TargetType="{x:Type Button}">
@@ -300,17 +298,36 @@ $UIReader=(New-Object System.Xml.XmlNodeReader $xaml)
 try{$UIWindow=[Windows.Markup.XamlReader]::Load($UIReader)}
 catch{Write-Host "Error: Unable to load Windows.Markup.XamlReader:$($_.Exception.Message)"; exit}
 
-$Win32ShowWindowAsync = Add-Type –memberDefinition @"  
-[DllImport("user32.dll")]  
-public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);  
-"@ -name "Win32ShowWindowAsync" -namespace Win32Functions –passThru 
+$Win32API = Add-Type -Name Funcs -Namespace Win32 -PassThru -MemberDefinition @'
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern IntPtr FindWindow(string lpClassName, IntPtr lpWindowName);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern IntPtr FindWindow(IntPtr lpClassName, string lpWindowName);
+
+    [DllImport("user32.dll", SetLastError = true)] 
+    public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+'@
+
+$SW_HIDE = 0;
+$SW_SHOWNORMAL = 1;
+$SW_SHOWMINIMIZED = 2;
+$SW_SHOWMAXIMIZED = 3;
+$SW_SHOWNOACTIVATE = 4;
+$SW_RESTORE = 9;
+$SW_SHOWDEFAULT = 10;
 
 $ThisWindow = [System.Diagnostics.Process]::GetCurrentProcess().MainwindowTitle
 
-#get-process | 
-#       where mainwindowhandle -ne 0 |  
-#            %{if ($_.MainWindowTitle -eq $ThisWindow) {} else { $Win32ShowWindowAsync::ShowWindowAsync($_.MainWindowHandle, 0) | Out-Null} }
-#            
+$Windows = Get-Process | Where-object{$_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -ne $ThisWindow -and $_.MainWindowTitle -ne $Null} | Select-Object ProcessName,Id,MainWindowHandle,MainWindowTitle
+Foreach($Window in $Windows){
+    Write-Host "Hiding $($Window.MainWindowTitle)"
+    $Win32API::ShowWindowAsync($Window.MainWindowHandle, $SW_HIDE) | Out-Null 
+}
+
 #===========================================================================
 # Store Form Objects In PowerShell
 #===========================================================================
@@ -496,5 +513,5 @@ $UIWindow.Add_Closing({
     Stop-Process -id $pid
 })
 
-$Host.UI.RawUI.WindowTitle = "HubSpot OSD Cloud"
+$Host.UI.RawUI.WindowTitle = "HubSpot Cloud OSD"
 $UIWindow.ShowDialog() | Out-Null
