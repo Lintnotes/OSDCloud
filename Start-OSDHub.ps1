@@ -463,7 +463,25 @@ $WPFComputerNameTextBox.Text = "INT" + $DeviceInfo.SerialNumber.SubString($Devic
 'pl-pl','pt-br','pt-pt','ro-ro','ru-ru','sk-sk',
 'sl-si','sr-latn-rs','sv-se','th-th','tr-tr',
 'uk-ua','zh-cn','zh-tw' | ForEach-Object { $WPFOSLanguageCombobox.Items.Add($_)} | Out-Null
-"Hubspot Production Devices","HubSpot Production Kiosk Devices" | ForEach-Object { $WPFAutopilotJsonCombobox.Items.Add($_)} | Out-Null
+"Hubspot Production Devices","HubSpot Production Zoom Kiosk Devices","HubSpot Production Appspace Kiosk Devices","None" | ForEach-Object { $WPFAutopilotJsonCombobox.Items.Add($_)} | Out-Null
+$WPFOSNameCombobox.ToolTip = "Select your target Operating System "
+$WPFOSLanguageCombobox.ToolTip = "Select your language preference."
+$WPFAutopilotJsonCombobox.ToolTip = "Ensure to select the proper autopilot profile - Default is Hubspot Production Devices."
+$WPFComputerNameTextBox.ToolTip = "Computer Name must be greater than 5 characters and less than 15 characters"
+$WPFStartButton.ToolTip = "Select start to begin your deployment. - Warning this will wipe all data on the disk."
+
+#AutoPilot Config Change Event
+$WPFAutopilotJsonCombobox.Add_SelectionChanged({
+    $WPFAutopilotJsonCombobox.ToolTip = "Ensure to select the proper autopilot profile - Default is Hubspot Production Devices."
+    If($WPFAutopilotJsonCombobox.SelectedItem.Content -match 'Zoom')
+        $WPFComputerNameTextBox.Text = "ZOOM"
+    ElseIf($WPFAutopilotJsonCombobox.SelectedItem.Content -match 'Appspace'){
+        $WPFComputerNameTextBox.Text = "SIGN"
+    }
+    Else{
+        $WPFComputerNameTextBox.Text = "INT" + $DeviceInfo.SerialNumber.SubString($DeviceInfo.SerialNumber.Length - 7).ToUpper()
+    }
+})
 
 # Computer Name Text Box Change Event
 $WPFComputerNameTextBox.Add_TextChanged({
