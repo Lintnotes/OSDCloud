@@ -464,6 +464,7 @@ $WPFComputerNameTextBox.Text = "INT" + $DeviceInfo.SerialNumber.SubString($Devic
 'sl-si','sr-latn-rs','sv-se','th-th','tr-tr',
 'uk-ua','zh-cn','zh-tw' | ForEach-Object { $WPFOSLanguageCombobox.Items.Add($_)} | Out-Null
 "Hubspot Production Devices","HubSpot Production Zoom Kiosk Devices","HubSpot Production Appspace Kiosk Devices","None" | ForEach-Object { $WPFAutopilotJsonCombobox.Items.Add($_)} | Out-Null
+$WPFComputerNameTextBox.IsReadOnly = $True;
 $WPFOSNameCombobox.ToolTip = "Select your target Operating System "
 $WPFOSLanguageCombobox.ToolTip = "Select your language preference."
 $WPFAutopilotJsonCombobox.ToolTip = "Ensure to select the proper autopilot profile - Default is Hubspot Production Devices."
@@ -475,21 +476,25 @@ $WPFAutopilotJsonCombobox.Add_SelectionChanged({
     $WPFAutopilotJsonCombobox.ToolTip = "Ensure to select the proper autopilot profile - Default is Hubspot Production Devices."
     If($WPFAutopilotJsonCombobox.SelectedItem -match 'Zoom'){
         $WPFComputerNameTextBox.Text = "ZOOM-"
+        $WPFComputerNameTextBox.IsReadOnly = $False;
         $WPFComputerNameTextBox.ToolTip="Computer Name format ZOOM-BLDG-ROOM"
         $WPFComputerNameTextBox.Focus();
     }
     ElseIf($WPFAutopilotJsonCombobox.SelectedItem -match 'Appspace'){
         $WPFComputerNameTextBox.Text = "SIGN-"
+        $WPFComputerNameTextBox.IsReadOnly = $False;
         $WPFComputerNameTextBox.ToolTip="Computer Name format SIGN-BLDG-ROOM"
         $WPFComputerNameTextBox.Focus();
     }
-    ElseIf($WPFAutopilotJsonCombobox.SelectedItem -match 'Production'){
+    ElseIf($WPFAutopilotJsonCombobox.SelectedItem -eq 'Hubspot Production Devices'){
         $WPFComputerNameTextBox.Text = "INT" + $DeviceInfo.SerialNumber.SubString($DeviceInfo.SerialNumber.Length - 7).ToUpper()
+        $WPFComputerNameTextBox.IsReadOnly = $True;
         $WPFComputerNameTextBox.ToolTip="Computer Name format auto generated"
         $WPFComputerNameTextBox.Focus();
     }
     Else{
         $WPFComputerNameTextBox.Text = "INT" + $DeviceInfo.SerialNumber.SubString($DeviceInfo.SerialNumber.Length - 7).ToUpper()
+        $WPFComputerNameTextBox.IsReadOnly = $False;
     }
 })
 
