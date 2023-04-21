@@ -137,11 +137,11 @@ if ($WindowsPhase -eq 'WinPE') {
     Else {
         If ($OSDVars.AutoPilotConfig -match 'zoom'){
             $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', $AssignedComputerName)
-            $AutoPilotConfig = $Kiosks.Replace('"9d255231-51ea-4353-8f73-bc7f3b403727"', "Zoom-9d255231-51ea-4353-8f73-bc7f3b403727") 
+            $AutoPilotConfig = $AutoPilotConfig.Replace('"9d255231-51ea-4353-8f73-bc7f3b403727"', "Zoom-9d255231-51ea-4353-8f73-bc7f3b403727") 
         }
         elseif ($OSDVars.AutoPilotConfig -match 'Appspace') {
             $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', $AssignedComputerName)
-            $AutoPilotConfig = $Kiosks.Replace('"9d255231-51ea-4353-8f73-bc7f3b403727"', "Appspace-9d255231-51ea-4353-8f73-bc7f3b403727") 
+            $AutoPilotConfig = $AutoPilotConfig.Replace('"9d255231-51ea-4353-8f73-bc7f3b403727"', "Appspace-9d255231-51ea-4353-8f73-bc7f3b403727") 
         }
     }
     If($Null -ne $AutoPilotConfig){
