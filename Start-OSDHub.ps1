@@ -473,8 +473,9 @@ $WPFStartButton.ToolTip = "Select start to begin your deployment. - Warning this
 #AutoPilot Config Change Event
 $WPFAutopilotJsonCombobox.Add_SelectionChanged({
     $WPFAutopilotJsonCombobox.ToolTip = "Ensure to select the proper autopilot profile - Default is Hubspot Production Devices."
-    If($WPFAutopilotJsonCombobox.SelectedItem.Content -match 'Zoom')
+    If($WPFAutopilotJsonCombobox.SelectedItem.Content -match 'Zoom'){
         $WPFComputerNameTextBox.Text = "ZOOM"
+    }
     ElseIf($WPFAutopilotJsonCombobox.SelectedItem.Content -match 'Appspace'){
         $WPFComputerNameTextBox.Text = "SIGN"
     }
