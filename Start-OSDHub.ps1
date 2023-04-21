@@ -473,11 +473,20 @@ $WPFStartButton.ToolTip = "Select start to begin your deployment. - Warning this
 #AutoPilot Config Change Event
 $WPFAutopilotJsonCombobox.Add_SelectionChanged({
     $WPFAutopilotJsonCombobox.ToolTip = "Ensure to select the proper autopilot profile - Default is Hubspot Production Devices."
-    If($WPFAutopilotJsonCombobox.SelectedItem.Content -match 'Zoom'){
-        $WPFComputerNameTextBox.Text = "ZOOM"
+    If($WPFAutopilotJsonCombobox.SelectedItem -match 'Zoom'){
+        $WPFComputerNameTextBox.Text = "ZOOM-"
+        $WPFComputerNameTextBox.ToolTip="Computer Name format ZOOM-BLDG-ROOM"
+        $WPFComputerNameTextBox.Focus();
     }
-    ElseIf($WPFAutopilotJsonCombobox.SelectedItem.Content -match 'Appspace'){
-        $WPFComputerNameTextBox.Text = "SIGN"
+    ElseIf($WPFAutopilotJsonCombobox.SelectedItem -match 'Appspace'){
+        $WPFComputerNameTextBox.Text = "SIGN-"
+        $WPFComputerNameTextBox.ToolTip="Computer Name format SIGN-BLDG-ROOM"
+        $WPFComputerNameTextBox.Focus();
+    }
+    ElseIf($WPFAutopilotJsonCombobox.SelectedItem -match 'Production'){
+        $WPFComputerNameTextBox.Text = "INT" + $DeviceInfo.SerialNumber.SubString($DeviceInfo.SerialNumber.Length - 7).ToUpper()
+        $WPFComputerNameTextBox.ToolTip="Computer Name format auto generated"
+        $WPFComputerNameTextBox.Focus();
     }
     Else{
         $WPFComputerNameTextBox.Text = "INT" + $DeviceInfo.SerialNumber.SubString($DeviceInfo.SerialNumber.Length - 7).ToUpper()
