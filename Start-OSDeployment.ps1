@@ -11,7 +11,7 @@
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
 $null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
 #Script Information
-$ScriptName = 'Start-OSDeployment'
+$ScriptName = 'HubSpot Cloud OSD'
 $ScriptVersion = '23.4.17.1'
 
 #Determine the proper Windows environment
@@ -26,27 +26,9 @@ else {
 #Finish initialization
 Write-Host -ForegroundColor DarkGray "$ScriptName $ScriptVersion $WindowsPhase"
 
-#Load OSDCloud Functions
-Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
-#endregion
 #=================================================
 #region WinPE
 if ($WindowsPhase -eq 'WinPE') {
-    $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
-    [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
-    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    if ((Get-MyComputerManufacturer) -match 'Dell') {
-        Install-Module DellBIOSProvider -Force
-        $DellProviderPath = Split-Path -Path (Get-Module -ListAvailable DellBiosProvider).Path
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/msvcp140.dll" -OutFile "$DellProviderPath\msvcp140.dll" -ErrorAction SilentlyContinue
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140.dll" -OutFile "$DellProviderPath\vcruntime140.dll" -ErrorAction SilentlyContinue
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140_1.dll" -OutFile "$DellProviderPath\vcruntime140_1.dll" -ErrorAction SilentlyContinue
-        Import-Module DellBIOSProvider
-    }
-    if ((Get-MyComputerManufacturer) -match 'HP') {
-        Install-Module -Name HPCMSL -AcceptLicense
-        Install-Module -Name HPCMSL -Force -AcceptLicense
-    }
 
     if ((Get-MyComputerModel) -match 'Virtual|Vmware') {
         Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
@@ -63,19 +45,19 @@ if ($WindowsPhase -eq 'WinPE') {
     #================================================
     $Production = @'
 {
-    "CloudAssignedDomainJoinMethod":  0,
+    "CloudAssignedTenantId":  "aa90fdc2-6a50-4f3d-b4bd-7fe753d268aa",
     "CloudAssignedDeviceName": "INT%SERIAL%",
     "CloudAssignedAutopilotUpdateTimeout":  1800000,
+    "CloudAssignedAutopilotUpdateDisabled":  1,
     "CloudAssignedForcedEnrollment":  1,
     "Version":  2049,
-    "CloudAssignedTenantId":  "aa90fdc2-6a50-4f3d-b4bd-7fe753d268aa",
-    "CloudAssignedAutopilotUpdateDisabled":  1,
-    "ZtdCorrelationId":  "82349a82-5f14-4eb4-a77b-5c8648f3343c",
     "Comment_File":  "Profile Hubspot Production Devices",
     "CloudAssignedAadServerData":  "{\"ZeroTouchConfig\":{\"CloudAssignedTenantUpn\":\"\",\"ForcedEnrollment\":1,\"CloudAssignedTenantDomain\":\"hubspotcorp.onmicrosoft.com\"}}",
     "CloudAssignedOobeConfig":  1310,
-    "CloudAssignedTenantDomain":  "hubspotcorp.onmicrosoft.com",
-    "CloudAssignedLanguage":  "os-default"
+    "CloudAssignedDomainJoinMethod":  0,
+    "ZtdCorrelationId":  "82349a82-5f14-4eb4-a77b-5c8648f3343c",
+    "CloudAssignedLanguage":  "os-default",
+    "CloudAssignedTenantDomain":  "hubspotcorp.onmicrosoft.com"
 }
 '@
 
@@ -106,7 +88,7 @@ if ($WindowsPhase -eq 'WinPE') {
         OSLanguage    = $OSDVars.OperatingSystemLanguage
         OSLicense     = "Retail"
         SkipAutopilot = $True
-        SkipODT       = $true
+        SkipODT       = $True
         Firmware      = $True
         ZTI           = $True
     }
