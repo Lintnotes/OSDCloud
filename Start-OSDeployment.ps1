@@ -134,16 +134,18 @@ if ($WindowsPhase -eq 'WinPE') {
     If ($OSDVars.AutoPilotConfig -eq 'Hubspot Production Devices') {
         $AutoPilotConfig = $Production.Replace('"INT%SERIAL%"', $AssignedComputerName)
     }
-    Else {
-        If ($OSDVars.AutoPilotConfig -match 'zoom'){
+    ElseIf($OSDVars.AutoPilotConfig -match 'zoom'){
             $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', $AssignedComputerName)
             $AutoPilotConfig = $AutoPilotConfig.Replace('"9d255231-51ea-4353-8f73-bc7f3b403727"', "Zoom-9d255231-51ea-4353-8f73-bc7f3b403727") 
-        }
-        elseif ($OSDVars.AutoPilotConfig -match 'Appspace') {
+    }
+    ElseIf($OSDVars.AutoPilotConfig -match 'Appspace') {
             $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', $AssignedComputerName)
             $AutoPilotConfig = $AutoPilotConfig.Replace('"9d255231-51ea-4353-8f73-bc7f3b403727"', "Appspace-9d255231-51ea-4353-8f73-bc7f3b403727") 
-        }
     }
+    Else{
+        $AutoPilotConfig = $Null
+    }
+
     If($Null -ne $AutoPilotConfig){
         $AutoPilotConfig  | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json | Out-Null
     }
@@ -157,7 +159,6 @@ PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Cleanup-Script.ps1
-Start /Wait Powershell iex(irm sandbox.osdcloud.com)
 Start /Wait PowerShell -NoL -C Restart-Computer -Force
 '@
     $OOBECMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\OOBE.cmd' -Encoding ascii -Force
