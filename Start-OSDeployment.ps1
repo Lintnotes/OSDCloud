@@ -43,11 +43,11 @@ if ($WindowsPhase -eq 'WinPE') {
     }
     if ((Get-MyComputerManufacturer) -match 'HP') {
         Write-Host -ForegroundColor DarkGray "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Importing HPCMSL"
-        Install-Module -Name HPCMSL -Force -AcceptLicense
+        Import-Module -Name HPCMSL -Force -AcceptLicense
     }
     if ((Get-MyComputerManufacturer) -match 'Lenovo') {
         Write-Host -ForegroundColor DarkGray "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Importing LSUClient"
-        Install-Module -Name LSUClient -Force
+        Import-Module -Name LSUClient -Force
     }
 
     if ((Get-MyComputerModel) -match 'Virtual|Vmware') {
