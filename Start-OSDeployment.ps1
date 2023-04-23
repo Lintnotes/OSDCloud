@@ -30,6 +30,26 @@ Write-Host -ForegroundColor DarkGray "$ScriptName $ScriptVersion $WindowsPhase"
 #region WinPE
 if ($WindowsPhase -eq 'WinPE') {
 
+    $TLS12Protocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
+    [System.Net.ServicePointManager]::SecurityProtocol = $TLS12Protocol
+    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+    if ((Get-MyComputerManufacturer) -match 'Dell') {
+        $DellProviderPath = Split-Path -Path (Get-Module -ListAvailable DellBiosProvider).Path
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/msvcp140.dll" -OutFile "$DellProviderPath\msvcp140.dll" -ErrorAction SilentlyContinue
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140.dll" -OutFile "$DellProviderPath\vcruntime140.dll" -ErrorAction SilentlyContinue
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140_1.dll" -OutFile "$DellProviderPath\vcruntime140_1.dll" -ErrorAction SilentlyContinue
+        Write-Host -ForegroundColor DarkGray "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Importing DellBiosProvider"
+        Import-Module DellBIOSProvider
+    }
+    if ((Get-MyComputerManufacturer) -match 'HP') {
+        Write-Host -ForegroundColor DarkGray "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Importing HPCMSL"
+        Install-Module -Name HPCMSL -Force -AcceptLicense
+    }
+    if ((Get-MyComputerManufacturer) -match 'Lenovo') {
+        Write-Host -ForegroundColor DarkGray "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Importing LSUClient"
+        Install-Module -Name LSUClient -Force
+    }
+
     if ((Get-MyComputerModel) -match 'Virtual|Vmware') {
         Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
         Set-DisRes 1600
@@ -39,6 +59,7 @@ if ($WindowsPhase -eq 'WinPE') {
         $OSDVars = Get-Content -Raw -Path $env:WINDIR\Temp\OSDVarsFile.txt | ConvertFrom-StringData
     }
     $AssignedComputerName = $OSDVars.ComputerName
+    Write-Host -ForegroundColor DarkGray "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Computername: $AssignedComputerName"
 
     #================================================
     #   Autopilot Configs
@@ -113,6 +134,7 @@ if ($WindowsPhase -eq 'WinPE') {
     }
     Start-OSDCloud @Params
     Start-EjectCD
+    Set-WindowsOEMActivation
     If ($OSDVars.AutoPilotConfig -eq 'Hubspot Production Devices') {
         $AutoPilotConfig = $Production.Replace('"INT%SERIAL%"', $AssignedComputerName)
     }
