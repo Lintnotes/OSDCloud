@@ -22,7 +22,7 @@ $DeviceLockKeys = @(
 )
 
 ForEach ($Key in $DeviceLockKeys) {
-    Remove-Item $Key -Force -ErrorAction Continue
+    Remove-Item $Key -Recurse -Force -ErrorAction Continue
 }
 
 $Inf = @"
