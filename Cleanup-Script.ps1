@@ -22,7 +22,7 @@ $DeviceLockKeys = @(
 )
 
 ForEach ($Key in $DeviceLockKeys) {
-    Remove-Item $Key -Recurse -Force -ErrorAction Continue
+    Remove-Item $Key -Recurse -Force -ErrorAction SilentlyContinue
 }
 
 $Inf = @"
@@ -46,7 +46,6 @@ ForceLogoffWhenHourExpire = 0
  
 $Null = New-Item -Path "$Env:SystemRoot\security\database" -Name SecPolicy.inf -ItemType File -Value $Inf -Force
 $Process = Start-Process -FilePath Secedit.exe -ArgumentList "/configure /db secedit.sdb /cfg $env:SystemRoot\Security\Database\SecPolicy.inf /overwrite /quiet" -NoNewWindow -PassThru -Wait
-$Process.ExitCode
 
 If($env:Computername -match 'Zoom|Sign'){
     $RegKeyPath = "HKLM:\SOFTWARE\Policies\Microsoft\PassportForWork"
