@@ -134,7 +134,6 @@ if ($WindowsPhase -eq 'WinPE') {
     }
     Start-OSDCloud @Params
     Start-EjectCD
-    Set-WindowsOEMActivation
     If ($OSDVars.AutoPilotConfig -eq 'Hubspot Production Devices') {
         $AutoPilotConfig = $Production.Replace('"INT%SERIAL%"', $AssignedComputerName)
     }
