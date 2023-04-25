@@ -150,7 +150,7 @@ if ($WindowsPhase -eq 'WinPE') {
     }
 
     If($Null -ne $AutoPilotConfig){
-        $AutoPilotConfig  | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json | Out-Null
+        $AutoPilotConfig  | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json -Encoding ascii | Out-Null
     }
     
     #================================================
