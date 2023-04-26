@@ -2,6 +2,9 @@
 #Install-Module -Name Microsoft.Graph.Intune
 Connect-MSGraph -ForceInteractive
 
+$Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-AutoPilotDeviceUpdate.log"
+$null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
+
 $SerialNumber = (Get-WmiObject -Class Win32_Bios).SerialNumber
 $DeviceID = Get-ItemPropertyValue HKLM:\SOFTWARE\Microsoft\Provisioning\Diagnostics\Autopilot\EstablishedCorrelations -Name EntDMID -ErrorAction SilentlyContinue
 If(Test-Path $env:windir\Provisioning\Autopilot\AutoPilotConfigurationFile.json){
@@ -96,3 +99,4 @@ If($AutopilotDevice -ne $Null){
         }
     }
 }
+Stop-Transcript
