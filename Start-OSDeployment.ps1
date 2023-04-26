@@ -152,7 +152,16 @@ if ($WindowsPhase -eq 'WinPE') {
     If($Null -ne $AutoPilotConfig){
         $AutoPilotConfig  | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json -Encoding ascii | Out-Null
     }
-    
+    If(Test-Path $env:windir\Provisioning\Autopilot\AutoPilotConfigurationFile.json){
+    $CorrectComputerName = (Get-Content $env:windir\Provisioning\Autopilot\AutoPilotConfigurationFile.json -raw | ConvertFrom-Json).CloudAssignedDeviceName
+        }
+        Else{
+            $CorrectComputerName = $env:Computername
+        }
+        If($env:computername -ne $CorrectComputerName){
+            Write-Host "Renaming Computer:$env:computername to $CorrectComputerName"
+            Rename-Computer -Computername $env:computername -NewName $CorrectComputerName -Force
+        }
     Read-Host -Prompt "Press Enter to exit"
     
     #================================================
