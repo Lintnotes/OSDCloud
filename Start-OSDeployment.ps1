@@ -92,7 +92,7 @@ if ($WindowsPhase -eq 'WinPE') {
     "Version":  2049,
     "Comment_File":  "Profile HubSpot Production Kiosk Devices",
     "CloudAssignedAadServerData":  "{\"ZeroTouchConfig\":{\"CloudAssignedTenantUpn\":\"\",\"ForcedEnrollment\":1,\"CloudAssignedTenantDomain\":\"hubspotcorp.onmicrosoft.com\"}}",
-    "CloudAssignedOobeConfig":  1310,
+    "CloudAssignedOobeConfig":  1406,
     "CloudAssignedDomainJoinMethod":  0,
     "ZtdCorrelationId":  "9d255231-51ea-4353-8f73-bc7f3b403727",
     "CloudAssignedLanguage":  "os-default",
