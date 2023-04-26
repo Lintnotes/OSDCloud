@@ -152,6 +152,7 @@ if ($WindowsPhase -eq 'WinPE') {
     If($Null -ne $AutoPilotConfig){
         $AutoPilotConfig  | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json -Encoding ascii | Out-Null
     }
+    iex (irm https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Update-AutopilotDevice.ps1)
     
     #================================================
     #  [PostOS] AutopilotOOBE CMD Command Line
@@ -178,7 +179,6 @@ Start /Wait PowerShell -NoL -C Restart-Computer -Force
     #   Restart-Computer
     #=======================================================================
     #Write-Host "Restarting in 10 seconds!" -ForegroundColor Green
-    iex (irm https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Update-AutopilotDevice.ps1)
     Start-Sleep -Seconds 5
     $null = Stop-Transcript -ErrorAction Ignore
     wpeutil reboot
