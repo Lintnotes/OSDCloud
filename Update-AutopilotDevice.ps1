@@ -1,3 +1,4 @@
+Install-PackageProvider -Name NuGet -Force
 Install-Module -Name Microsoft.Graph.Intune
 Connect-MSGraph -ForceInteractive
 
