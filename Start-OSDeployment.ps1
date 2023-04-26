@@ -58,7 +58,7 @@ if ($WindowsPhase -eq 'WinPE') {
     If (Test-Path $env:WINDIR\Temp\OSDVarsFile.txt) {
         $OSDVars = Get-Content -Raw -Path $env:WINDIR\Temp\OSDVarsFile.txt | ConvertFrom-StringData
     }
-    $AssignedComputerName = $OSDVars.ComputerName
+    $AssignedComputerName = "`"$OSDVars.ComputerName`""
     Write-Host -ForegroundColor DarkGray "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Computername: $AssignedComputerName"
 
     #================================================
@@ -135,14 +135,14 @@ if ($WindowsPhase -eq 'WinPE') {
     Start-OSDCloud @Params
     Start-EjectCD
     If ($OSDVars.AutoPilotConfig -eq 'Hubspot Production Devices') {
-        $AutoPilotConfig = $Production.Replace('"INT%SERIAL%"', "`"$AssignedComputerName`"")
+        $AutoPilotConfig = $Production.Replace('"INT%SERIAL%"', $AssignedComputerName)
     }
     ElseIf($OSDVars.AutoPilotConfig -match 'zoom'){
-            $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', "`"$AssignedComputerName`"")
+            $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', $AssignedComputerName)
             $AutoPilotConfig = $AutoPilotConfig.Replace('"6dcf7108-8c1d-415c-a27d-3506317657dc"', '"Zoom-6dcf7108-8c1d-415c-a27d-3506317657dc"') 
     }
     ElseIf($OSDVars.AutoPilotConfig -match 'Appspace') {
-            $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', "`"$AssignedComputerName`"")
+            $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', $AssignedComputerName)
             $AutoPilotConfig = $AutoPilotConfig.Replace('"6dcf7108-8c1d-415c-a27d-3506317657dc"', '"Appspace-6dcf7108-8c1d-415c-a27d-3506317657dc"') 
     }
     Else{
@@ -152,7 +152,6 @@ if ($WindowsPhase -eq 'WinPE') {
     If($Null -ne $AutoPilotConfig){
         $AutoPilotConfig  | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json -Encoding ascii | Out-Null
     }
-    iex (irm https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Update-AutopilotDevice.ps1)
     
     #================================================
     #  [PostOS] AutopilotOOBE CMD Command Line
