@@ -161,7 +161,6 @@ if ($WindowsPhase -eq 'WinPE') {
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Install-EmbeddedProductKey.ps1
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Update-AutopilotDevice.ps1
 Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Cleanup-Script.ps1
 Start /Wait PowerShell -NoL -C Restart-Computer -Force
 '@
@@ -179,6 +178,7 @@ Start /Wait PowerShell -NoL -C Restart-Computer -Force
     #   Restart-Computer
     #=======================================================================
     #Write-Host "Restarting in 10 seconds!" -ForegroundColor Green
+    iex (irm https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/Update-AutopilotDevice.ps1)
     Start-Sleep -Seconds 5
     $null = Stop-Transcript -ErrorAction Ignore
     wpeutil reboot
