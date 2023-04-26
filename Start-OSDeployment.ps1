@@ -153,6 +153,8 @@ if ($WindowsPhase -eq 'WinPE') {
         $AutoPilotConfig  | Out-File C:\Windows\Provisioning\AutoPilot\AutoPilotConfigurationFile.json -Encoding ascii | Out-Null
     }
     
+    Read-Host -Prompt "Press Enter to exit"
+    
     #================================================
     #  [PostOS] AutopilotOOBE CMD Command Line
     #================================================
