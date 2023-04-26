@@ -6,11 +6,11 @@ $SerialNumber = (Get-WmiObject -Class Win32_Bios).SerialNumber
 $DeviceID = Get-ItemPropertyValue HKLM:\SOFTWARE\Microsoft\Provisioning\Diagnostics\Autopilot\EstablishedCorrelations -Name EntDMID -ErrorAction SilentlyContinue
 $CorrectComputerName = $env:Computername
 
-$ManagedDeviceuri = 'https://graph.microsoft.com/v1.0/deviceManagement/managedDevices?$filter=startswith(operatingSystem,''Windows'')'
-$ManagedDevice = Invoke-MSGraphRequest -HttpMethod GET -Url $ManagedDeviceuri | Get-MSGraphAllPages | Where-Object{$_.id -eq $DeviceID}
-
 $AutopilotDeviceuri = 'https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeviceIdentities'
-$AutopilotDevice = Invoke-MSGraphRequest -HttpMethod GET -Url $AutopilotDeviceuri | Get-MSGraphAllPages | Where-Object{$_.ManagedDeviceId -eq $DeviceID}
+$AutopilotDevice = Invoke-MSGraphRequest -HttpMethod GET -Url $AutopilotDeviceuri | Get-MSGraphAllPages | Where-Object{$_.ManagedDeviceId -eq $DeviceID -or $_.serialNumber -eq $SerialNumber}
+
+$ManagedDeviceuri = 'https://graph.microsoft.com/v1.0/deviceManagement/managedDevices?$filter=startswith(operatingSystem,''Windows'')'
+$ManagedDevice = Invoke-MSGraphRequest -HttpMethod GET -Url $ManagedDeviceuri | Get-MSGraphAllPages | Where-Object{$_.id -eq $DeviceID -or $_.id -eq $AutopilotDevice.managedDeviceId}
 
 If($Null -eq $ManagedDevice){
     Write-Host "Azure AD Managed Device Not Found." -ForegroundColor Red
