@@ -94,7 +94,7 @@ if ($WindowsPhase -eq 'WinPE') {
     "CloudAssignedAadServerData":  "{\"ZeroTouchConfig\":{\"CloudAssignedTenantUpn\":\"\",\"ForcedEnrollment\":1,\"CloudAssignedTenantDomain\":\"hubspotcorp.onmicrosoft.com\"}}",
     "CloudAssignedOobeConfig":  1406,
     "CloudAssignedDomainJoinMethod":  0,
-    "ZtdCorrelationId":  "9d255231-51ea-4353-8f73-bc7f3b403727",
+    "ZtdCorrelationId":  "6dcf7108-8c1d-415c-a27d-3506317657dc",
     "CloudAssignedLanguage":  "os-default",
     "CloudAssignedTenantDomain":  "hubspotcorp.onmicrosoft.com"
 }
@@ -139,11 +139,11 @@ if ($WindowsPhase -eq 'WinPE') {
     }
     ElseIf($OSDVars.AutoPilotConfig -match 'zoom'){
             $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', '"$AssignedComputerName"')
-            $AutoPilotConfig = $AutoPilotConfig.Replace('"9d255231-51ea-4353-8f73-bc7f3b403727"', '"Zoom-9d255231-51ea-4353-8f73-bc7f3b403727"') 
+            $AutoPilotConfig = $AutoPilotConfig.Replace('"6dcf7108-8c1d-415c-a27d-3506317657dc"', '"Zoom-6dcf7108-8c1d-415c-a27d-3506317657dc"') 
     }
     ElseIf($OSDVars.AutoPilotConfig -match 'Appspace') {
             $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', '"$AssignedComputerName"')
-            $AutoPilotConfig = $AutoPilotConfig.Replace('"9d255231-51ea-4353-8f73-bc7f3b403727"', '"Appspace-9d255231-51ea-4353-8f73-bc7f3b403727"') 
+            $AutoPilotConfig = $AutoPilotConfig.Replace('"6dcf7108-8c1d-415c-a27d-3506317657dc"', '"Appspace-6dcf7108-8c1d-415c-a27d-3506317657dc"') 
     }
     Else{
         $AutoPilotConfig = $Null
