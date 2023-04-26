@@ -3,6 +3,18 @@ Start-Transcript -Path (Join-Path "$env:WINDIR\Temp\" $Global:Transcript) -Error
 
 Write-Host "Execute OSD Cloud Cleanup Script" -ForegroundColor Green
 
+If(Test-Path $env:windir\Provisioning\Autopilot\AutoPilotConfigurationFile.json){
+    $CorrectComputerName = (Get-Content $env:windir\Provisioning\Autopilot\AutoPilotConfigurationFile.json -raw | ConvertFrom-Json).CloudAssignedDeviceName
+}
+Else{
+    $CorrectComputerName = $env:Computername
+}
+If($env:computername -ne $CorrectComputerName){
+    Write-Host "Renaming Computer:$env:computername to $CorrectComputerName"
+    Rename-Computer -Computername $env:computername -NewName $CorrectComputerName -Force
+}
+
+
 # Copying OSDCloud Logs
 If (Test-Path -Path 'C:\OSDCloud\Logs') {
     Move-Item 'C:\OSDCloud\Logs\*.*' -Destination 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD' -Force
