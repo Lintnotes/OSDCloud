@@ -1,6 +1,16 @@
 #Install-PackageProvider -Name NuGet -Force
 #Install-Module -Name Microsoft.Graph.Intune
-Connect-MSGraph -ForceInteractive
+#Connect-MSGraph -ForceInteractive
+
+$AutopilotParams = @{
+    Online = $true
+    TenantId = 'aa90fdc2-6a50-4f3d-b4bd-7fe753d268aa'
+    AppId = 'd1a4a8cc-8737-4efb-b4d9-1de840060d0f'
+    AppSecret = '0qd8Q~y7OyIs4fCU5~hACBb40YY2G3LXfdYcWaTo'
+    GroupTag = 'Enterprise'
+    Assign = $true
+}
+Get-WindowsAutoPilotInfo @AutopilotParams
 
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-AutoPilotDeviceUpdate.log"
 $null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
