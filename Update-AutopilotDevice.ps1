@@ -4,7 +4,13 @@ Connect-MSGraph -ForceInteractive
 
 $SerialNumber = (Get-WmiObject -Class Win32_Bios).SerialNumber
 $DeviceID = Get-ItemPropertyValue HKLM:\SOFTWARE\Microsoft\Provisioning\Diagnostics\Autopilot\EstablishedCorrelations -Name EntDMID -ErrorAction SilentlyContinue
-$CorrectComputerName = $env:Computername
+If(Test-Path $env:windir\Provisioning\Autopilot\AutoPilotConfigurationFile.json){
+    $CorrectComputerName = (Get-Content $env:windir\Provisioning\Autopilot\AutoPilotConfigurationFile.json -raw | ConvertFrom-Json).CloudAssignedDeviceName
+}
+Else{
+    $CorrectComputerName = $env:Computername
+}
+
 
 $AutopilotDeviceuri = 'https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeviceIdentities'
 $AutopilotDevice = Invoke-MSGraphRequest -HttpMethod GET -Url $AutopilotDeviceuri | Get-MSGraphAllPages | Where-Object{$_.ManagedDeviceId -eq $DeviceID -or $_.serialNumber -eq $SerialNumber}
