@@ -312,12 +312,6 @@ $Win32API = Add-Type -Name Funcs -Namespace Win32 -PassThru -MemberDefinition @'
     public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 '@
 
-Write-Host -ForegroundColor Green "Updating OSD PowerShell Module"
-Install-Module OSD -Force
-
-Write-Host  -ForegroundColor Green "Importing OSD PowerShell Module"
-Import-Module OSD -Force
-
 $SW_HIDE = 0;
 $SW_SHOWNORMAL = 1;
 $SW_SHOWMINIMIZED = 2;
