@@ -1,5 +1,5 @@
-Install-PackageProvider -Name NuGet -Force
-Install-Module -Name Microsoft.Graph.Intune
+#Install-PackageProvider -Name NuGet -Force
+#Install-Module -Name Microsoft.Graph.Intune
 Connect-MSGraph -ForceInteractive
 
 $SerialNumber = (Get-WmiObject -Class Win32_Bios).SerialNumber
