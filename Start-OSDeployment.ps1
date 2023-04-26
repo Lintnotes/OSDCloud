@@ -12,7 +12,7 @@ $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
 $null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
 #Script Information
 $ScriptName = 'HubSpot Cloud OSD'
-$ScriptVersion = '23.4.17.1'
+$ScriptVersion = '23.4.26.1'
 
 #Determine the proper Windows environment
 if ($env:SystemDrive -eq 'X:') { $WindowsPhase = 'WinPE' }
@@ -35,9 +35,9 @@ if ($WindowsPhase -eq 'WinPE') {
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
     if ((Get-MyComputerManufacturer) -match 'Dell') {
         $DellProviderPath = Split-Path -Path (Get-Module -ListAvailable DellBiosProvider).Path
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/msvcp140.dll" -OutFile "$DellProviderPath\msvcp140.dll" -ErrorAction SilentlyContinue
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140.dll" -OutFile "$DellProviderPath\vcruntime140.dll" -ErrorAction SilentlyContinue
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140_1.dll" -OutFile "$DellProviderPath\vcruntime140_1.dll" -ErrorAction SilentlyContinue
+        #Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/msvcp140.dll" -OutFile "$DellProviderPath\msvcp140.dll" -ErrorAction SilentlyContinue
+        #Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140.dll" -OutFile "$DellProviderPath\vcruntime140.dll" -ErrorAction SilentlyContinue
+        #Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Lintnotes/OSDCloud/main/ExtraFiles/vcruntime140_1.dll" -OutFile "$DellProviderPath\vcruntime140_1.dll" -ErrorAction SilentlyContinue
         Write-Host -ForegroundColor DarkGray "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Importing DellBiosProvider"
         Import-Module DellBIOSProvider
     }
