@@ -135,14 +135,14 @@ if ($WindowsPhase -eq 'WinPE') {
     Start-OSDCloud @Params
     Start-EjectCD
     If ($OSDVars.AutoPilotConfig -eq 'Hubspot Production Devices') {
-        $AutoPilotConfig = $Production.Replace('"INT%SERIAL%"', '"$($AssignedComputerName)"')
+        $AutoPilotConfig = $Production.Replace('"INT%SERIAL%"', "`"$AssignedComputerName`"")
     }
     ElseIf($OSDVars.AutoPilotConfig -match 'zoom'){
-            $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', '"$($AssignedComputerName)"')
+            $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', "`"$AssignedComputerName`"")
             $AutoPilotConfig = $AutoPilotConfig.Replace('"6dcf7108-8c1d-415c-a27d-3506317657dc"', '"Zoom-6dcf7108-8c1d-415c-a27d-3506317657dc"') 
     }
     ElseIf($OSDVars.AutoPilotConfig -match 'Appspace') {
-            $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', '"$($AssignedComputerName)"')
+            $AutoPilotConfig = $Kiosks.Replace('"INT%SERIAL%"', "`"$AssignedComputerName`"")
             $AutoPilotConfig = $AutoPilotConfig.Replace('"6dcf7108-8c1d-415c-a27d-3506317657dc"', '"Appspace-6dcf7108-8c1d-415c-a27d-3506317657dc"') 
     }
     Else{
