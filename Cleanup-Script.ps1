@@ -13,18 +13,6 @@ If (Test-Path -Path 'C:\OSDCloud') { Remove-Item -Path 'C:\OSDCloud' -Recurse -F
 If (Test-Path -Path 'C:\Drivers') { Remove-Item 'C:\Drivers' -Recurse -Force }
 If (Test-Path -Path 'C:\Temp') { Remove-Item 'C:\Temp' -Recurse -Force }
 
-$EnrollmentID = ((Get-Childitem 'HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Accounts\').Name).Split('\')[-1]
-
-$DeviceLockKeys = @(
-'HKLM:\SYSTEM\CurrentControlSet\Control\EAS'
-"HKLM:\SOFTWARE\Microsoft\PolicyManager\Providers\$EnrollmentID\default\Device\DeviceLock"
-'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\DeviceLock'
-)
-
-ForEach ($Key in $DeviceLockKeys) {
-    Remove-Item $Key -Recurse -Force -ErrorAction SilentlyContinue
-}
-
 $Inf = @"
 [Unicode]
 Unicode=yes
