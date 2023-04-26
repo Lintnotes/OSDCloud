@@ -58,7 +58,7 @@ if ($WindowsPhase -eq 'WinPE') {
     If (Test-Path $env:WINDIR\Temp\OSDVarsFile.txt) {
         $OSDVars = Get-Content -Raw -Path $env:WINDIR\Temp\OSDVarsFile.txt | ConvertFrom-StringData
     }
-    $AssignedComputerName = "`"$OSDVars.ComputerName`""
+    $AssignedComputerName = "`"$($OSDVars.ComputerName)`""
     Write-Host -ForegroundColor DarkGray "$((Get-Date).ToString('yyyy-MM-dd-HHmmss')) Computername: $AssignedComputerName"
 
     #================================================
