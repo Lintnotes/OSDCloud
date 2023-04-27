@@ -162,7 +162,7 @@ if ($WindowsPhase -eq 'WinPE') {
             Write-Host "Renaming Computer:$env:computername to $CorrectComputerName"
             Rename-Computer -Computername $env:computername -NewName $CorrectComputerName -Force
         }
-    Read-Host -Prompt "Press Enter to exit"
+   # Read-Host -Prompt "Press Enter to exit"
     
     #================================================
     #  [PostOS] AutopilotOOBE CMD Command Line
