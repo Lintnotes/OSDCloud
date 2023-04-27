@@ -3,7 +3,7 @@ Start-Transcript -Path (Join-Path "$env:ProgramData\Microsoft\IntuneManagementEx
 
 $Model = (Get-WmiObject -Class Win32_ComputerSystem).Model
 if ($Model -match 'Virtual|Vmware') {
-        Write-Host -ForegroundColor Green "Skipping VM"
+        Write-Host -ForegroundColor Green "Virtual Machine Detected skipping..."
 }
 Else{
     Write-Host -ForegroundColor Green "Get embedded product key"
